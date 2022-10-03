@@ -1,14 +1,8 @@
-import React, { useState } from "react";
-
-function Button() {
-    const [ count, setCount ] = useState(0);
-
+import React from 'react';
+function Button({setCount}) {
     return (
         <div className="Button">
-            <p>
-                {count}
-            </p>
-            <button onClick={() => setCount(count + 1)}>
+            <button onClick={setCount}>
                 Increment
             </button>
         </div>
