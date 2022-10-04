@@ -1,9 +1,20 @@
 import './App.css';
 import Button from './components/Button';
-import {useState} from "react";
+import {useState, useEffect} from 'react';
+
+const LOCAL_STORAGE_KEY = 'counterApp.count';
 
 function App() {
     const [ count, setCount ] = useState(0);
+
+    useEffect(() => {
+        const storedCount = parseInt(localStorage.getItem(LOCAL_STORAGE_KEY));
+        if (storedCount !== null) setCount(storedCount);
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_KEY, count.toString());
+    }, [count]);
 
     return (
         <div className="App">
@@ -11,10 +22,7 @@ function App() {
                 <p>
                     This is a basic counter.
                 </p>
-                <p>
-                    {count}
-                </p>
-                <Button setCount={() => setCount(count + 1)}/>
+                <Button count={count} setCount={() => setCount(count + 1)}/>
             </header>
         </div>
     );
