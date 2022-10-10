@@ -5,7 +5,7 @@ import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 
-import { Tab, Tabs, H1 } from '@blueprintjs/core';
+import { Tab, Tabs, H5 } from '@blueprintjs/core';
 
 import CountriesPanel from './CountriesPanel';
 
@@ -25,30 +25,23 @@ const ContinentsHeader = () => {
   const { data, loading, error } = useQuery(CONTINENTS_QUERY);
   const [ selectedTab, setSelectedTab ] = useState("WO");
 
-  if (error) {
-    console.log(error);
-    return <div/>
-  }
+  if (error) console.log(error);
 
-  if (loading) {
-    return (
-      <H1>Loading Continents...</H1>
-    )
-  }
+  if (loading) return <H5>Loading Continents...</H5>;
 
-  const tabsOnChange = (newTabID) => {
-    setSelectedTab(newTabID);
-  }
+  const tabsOnChange = (newTabID) => setSelectedTab(newTabID);
 
   return (
     <div className="Header">
       <Tabs id="header-tabs" large onChange={tabsOnChange} selectedTabId={selectedTab}>
         <div/>
-        <Tab id="WO" title="World" panel={<CountriesPanel id="WO"/>} panelClassName="World"/>
+        <Tab key="world-panel" id="WO" title="World" panel={<CountriesPanel id="WO"/>} panelClassName="world-panel"/>
         { data && data.continents.map((continent) => {
-            return (
-              <Tab id={continent.code} title={continent.name} panel={<CountriesPanel id={continent.code}/>} panelClassName={continent.name}/>
-            )
+          //Create a unique key and class name for each continent
+          const key = continent.name.replace(/\s/g, "").toLowerCase();
+          return (
+            <Tab key={key} id={continent.code} title={continent.name} panel={<CountriesPanel id={continent.code}/>} panelClassName={key + '-panel'}/>
+          )
         })}
         <Tabs.Expander/>
         <input className="bp4-input" type="text" placeholder="Search..." />
