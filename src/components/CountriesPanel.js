@@ -79,7 +79,7 @@ const CountriesPanel = ({id}) => {
 
   return (
     <div className="CountriesPanel">
-      <table className="bp4-html-table bp4-html-table-bordered bp4-html-table-condensed bp4-html-table-striped bp4-interactive" style={{ width: "90%", marginLeft: "5%", marginRight: "5%" }}>
+      <table className="bp4-html-table bp4-html-table-bordered bp4-html-table-condensed bp4-html-table-striped bp4-interactive" style={{ width: "96%", marginLeft: "2%", marginRight: "2%", paddingBottom: "2%"}}>
         <thead>
           <tr>
             <th>Flag</th>

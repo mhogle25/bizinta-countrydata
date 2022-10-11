@@ -1,5 +1,9 @@
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client"
 
+import "normalize.css";
+import "@blueprintjs/core/lib/css/blueprint.css";
+import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+
 import ContinentsHeader from './components/ContinentsHeader';
 
 const App = () => {
@@ -10,11 +14,11 @@ const App = () => {
   });
 
   return (
-    <ApolloProvider client={client}>
-      <div className="App">
-        <ContinentsHeader client={client}/>
+      <div className="App bp4-dark" style={{ backgroundColor: "#2f333c", minHeight: "100vh"}}>
+        <ApolloProvider client={client}>
+          <ContinentsHeader client={client}/>
+        </ApolloProvider>
       </div>
-    </ApolloProvider>
   );
 }
 

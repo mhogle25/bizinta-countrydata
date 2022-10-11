@@ -33,20 +33,20 @@ const ContinentsHeader = () => {
 
   return (
     <div className="Header">
-      <Tabs id="header-tabs" large onChange={tabsOnChange} selectedTabId={selectedTab}>
-        <div/>
-        <Tab key="world-panel" id="WO" title="World" panel={<CountriesPanel id="WO"/>} panelClassName="world-panel"/>
-        { data && data.continents.map((continent) => {
-          //Create a unique key and class name for each continent
-          const key = continent.name.replace(/\s/g, "").toLowerCase();
-          return (
-            <Tab key={key} id={continent.code} title={continent.name} panel={<CountriesPanel id={continent.code}/>} panelClassName={key + '-panel'}/>
-          )
-        })}
-        <Tabs.Expander/>
-        <input className="bp4-input" type="text" placeholder="Search..." />
-        <div/>
-      </Tabs>
+        <Tabs id="header-tabs" large onChange={tabsOnChange} selectedTabId={selectedTab}>
+          <div/>
+          <Tab key="world-panel" id="WO" title="World" panel={<CountriesPanel id="WO"/>} panelClassName="world-panel"/>
+          { data && data.continents.map((continent) => {
+            //Create a unique key and class name for each continent
+            const key = continent.name.replace(/\s/g, "").toLowerCase();
+            return (
+              <Tab key={key} id={continent.code} title={continent.name} panel={<CountriesPanel id={continent.code}/>} panelClassName={key + '-panel'}/>
+            )
+          })}
+          <Tabs.Expander/>
+          <input className="bp4-input" type="text" placeholder="Search..." />
+          <div/>
+        </Tabs>
     </div>
   )
 }
