@@ -6,9 +6,6 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/table/lib/css/table.css";
 import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
 
-import { Column, Table2, TableLoadingOption, Cell } from "@blueprintjs/table";
-import { HotkeysProvider } from "@blueprintjs/core";
-
 const COUNTRIES_BY_CONTINENT_QUERY = gql`
   query GetCountriesFromContinent($filterInput: CountryFilterInput!) {
       countries(filter: $filterInput) {
@@ -40,9 +37,12 @@ const COUNTRIES_QUERY = gql`
 `
 
 const CountriesPanel = ({id}) => {
-  const query = id === "W0" ? COUNTRIES_QUERY : COUNTRIES_BY_CONTINENT_QUERY;
+  let query = COUNTRIES_BY_CONTINENT_QUERY;
+  if (id === "WO") {
+    query = COUNTRIES_QUERY;
+  }
 
-  const { data, loading, error }= useQuery(query,
+  const { data, error }= useQuery(query,
     {
       variables: {
         filterInput: {
@@ -57,14 +57,26 @@ const CountriesPanel = ({id}) => {
 
   return (
     <div className="CountriesPanel">
-      <HotkeysProvider>
-        {/*Will set the table to loading while data is still being queried*/}
-        <Table2 numRows= { loading ? 1 : data.countries.length } loadingOptions={ loading ? [ TableLoadingOption.COLUMN_HEADERS, TableLoadingOption.CELLS, TableLoadingOption.ROW_HEADERS ] : [] }>
-          <Column name="Flag" cellRenderer={(rowIndex) => { return data ? <Cell>{data.countries[rowIndex].emoji}</Cell> : <Cell/>}}/>
-          <Column name="Name" cellRenderer={(rowIndex) => { return data ? <Cell>{data.countries[rowIndex].name}</Cell> : <Cell/>}}/>
-          <Column name="Capital" cellRenderer={(rowIndex) => { return data ? <Cell>{data.countries[rowIndex].capital}</Cell> : <Cell/>}}/>
-        </Table2>
-      </HotkeysProvider>
+      <table className="bp4-html-table bp4-html-table-bordered bp4-html-table-condensed bp4-html-table-striped bp4-interactive" style={{ border: "1px", marginLeft: "auto", marginRight: "auto" }}>
+        <thead>
+          <tr>
+            <th>Flag</th>
+            <th>Name</th>
+            <th>Capital</th>
+          </tr>
+        </thead>
+        <tbody>
+        {data && data.countries.map((country) => {
+          return (
+            <tr key={country.code}>
+              <td>{country.emoji}</td>
+              <td>{country.name}</td>
+              <td>{country.capital}</td>
+            </tr>
+          )
+        })}
+        </tbody>
+      </table>
     </div>
   )
 }
