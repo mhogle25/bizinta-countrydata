@@ -42,7 +42,7 @@ const CountriesPanel = ({id}) => {
     query = COUNTRIES_QUERY;
   }
 
-  const { data, error }= useQuery(query,
+  const { data, loading, error }= useQuery(query,
     {
       variables: {
         filterInput: {
@@ -55,9 +55,31 @@ const CountriesPanel = ({id}) => {
 
   if (error) console.log(error);
 
+  const renderTableContent = () => {
+    if (loading) return (
+      <tr>
+        <th>Loading...</th>
+        <th>Loading...</th>
+        <th>Loading...</th>
+      </tr>
+    )
+
+    return (
+      data && data.countries.map((country) => {
+        return (
+          <tr key={country.code}>
+            <td>{country.emoji}</td>
+            <td>{country.name}</td>
+            <td>{country.capital}</td>
+          </tr>
+        )
+      })
+    )
+  }
+
   return (
     <div className="CountriesPanel">
-      <table className="bp4-html-table bp4-html-table-bordered bp4-html-table-condensed bp4-html-table-striped bp4-interactive" style={{ border: "1px", marginLeft: "auto", marginRight: "auto" }}>
+      <table className="bp4-html-table bp4-html-table-bordered bp4-html-table-condensed bp4-html-table-striped bp4-interactive" style={{ width: "90%", marginLeft: "5%", marginRight: "5%" }}>
         <thead>
           <tr>
             <th>Flag</th>
@@ -66,15 +88,7 @@ const CountriesPanel = ({id}) => {
           </tr>
         </thead>
         <tbody>
-        {data && data.countries.map((country) => {
-          return (
-            <tr key={country.code}>
-              <td>{country.emoji}</td>
-              <td>{country.name}</td>
-              <td>{country.capital}</td>
-            </tr>
-          )
-        })}
+        {renderTableContent()}
         </tbody>
       </table>
     </div>
