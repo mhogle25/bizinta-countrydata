@@ -40,9 +40,7 @@ const COUNTRIES_QUERY = gql`
 `
 
 const CountriesPanel = ({id}) => {
-  let query = COUNTRIES_BY_CONTINENT_QUERY;
-  if (id === "WO")
-    query = COUNTRIES_QUERY;
+  const query = id === "W0" ? COUNTRIES_QUERY : COUNTRIES_BY_CONTINENT_QUERY;
 
   const { data, loading, error }= useQuery(query,
     {
