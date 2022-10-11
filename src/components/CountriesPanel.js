@@ -61,28 +61,10 @@ const CountriesPanel = ({id}) => {
     <div className="CountriesPanel">
       <HotkeysProvider>
         {/*Will set the table to loading while data is still being queried*/}
-        <Table2 numRows={ loading ? 1 : data ? data.countries.length : 0 } loadingOptions={ loading ? [ TableLoadingOption.COLUMN_HEADERS, TableLoadingOption.CELLS, TableLoadingOption.ROW_HEADERS ] : [] }>
-          <Column name="Flag" cellRenderer={(rowIndex) => {
-            if (data) {
-              return(
-                <Cell>{data.countries[rowIndex].emoji}</Cell>
-              )
-            }
-          }}/>
-          <Column name="Name" cellRenderer={(rowIndex) => {
-            if (data) {
-              return(
-                <Cell>{data.countries[rowIndex].name}</Cell>
-              )
-            }
-          }}/>
-          <Column name="Capital" cellRenderer={(rowIndex) => {
-            if (data) {
-              return(
-                <Cell>{data.countries[rowIndex].capital}</Cell>
-              )
-            }
-          }}/>
+        <Table2 numRows= { loading ? 1 : data.countries.length } loadingOptions={ loading ? [ TableLoadingOption.COLUMN_HEADERS, TableLoadingOption.CELLS, TableLoadingOption.ROW_HEADERS ] : [] }>
+          <Column name="Flag" cellRenderer={(rowIndex) => { return data ? <Cell>{data.countries[rowIndex].emoji}</Cell> : <Cell/>}}/>
+          <Column name="Name" cellRenderer={(rowIndex) => { return data ? <Cell>{data.countries[rowIndex].name}</Cell> : <Cell/>}}/>
+          <Column name="Capital" cellRenderer={(rowIndex) => { return data ? <Cell>{data.countries[rowIndex].capital}</Cell> : <Cell/>}}/>
         </Table2>
       </HotkeysProvider>
     </div>
