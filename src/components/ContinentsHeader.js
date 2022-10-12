@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { gql, useQuery } from "@apollo/client";
 
-import "normalize.css";
-import "@blueprintjs/core/lib/css/blueprint.css";
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
-
-import { Tab, Tabs, H5 } from '@blueprintjs/core';
+import { Tab, Tabs, H5, Classes } from '@blueprintjs/core';
 
 import CountriesPanel from './CountriesPanel';
 
@@ -44,7 +40,7 @@ const ContinentsHeader = () => {
             )
           })}
           <Tabs.Expander/>
-          <input className="bp4-input" type="text" placeholder="Search..." />
+          <input className={Classes.INPUT} type="text" placeholder="Search..." />
           <div/>
         </Tabs>
     </div>

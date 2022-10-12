@@ -1,4 +1,5 @@
 import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client"
+//import { Classes } from "@blueprintjs/core"
 
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
@@ -13,8 +14,9 @@ const App = () => {
     uri: 'https://countries.trevorblades.com'
   });
 
+  //className={["App", Classes.DARK].join(' ')}
   return (
-      <div className="App bp4-dark" style={{ backgroundColor: "#2f333c", minHeight: "100vh"}}>
+      <div className="App" style={{/* backgroundColor: "#2f333c",*/ minHeight: "100vh"}}>
         <ApolloProvider client={client}>
           <ContinentsHeader client={client}/>
         </ApolloProvider>
