@@ -66,23 +66,25 @@ const COUNTRIES_QUERY = gql`
   }
 `
 
-//Visualization of the table loading data
+const headers = ["Flag", "Name", "Capital"]
+
 const renderTableContent = (data, loading) => {
+  //Return progress meters as the content of the first row while loading
   if (loading) return (
     <tr>
-      <th>Loading...</th>
-      <th>Loading...</th>
-      <th>Loading...</th>
+      {headers.map((header) => {
+        return (
+          <td>
+            <div className={Classes.PROGRESS_BAR}>
+              <div className={Classes.PROGRESS_METER} style={{ width: "100%"}}></div>
+            </div>
+          </td>
+        )
+      })}
     </tr>
   )
 
-  return (
-    data && data.countries.map((country) => {
-      return (
-        <CountryInfo country={country}/>
-      )
-    })
-  )
+  return data && data.countries.map((country) => { return <CountryInfo country={country}/> });
 }
 
 const CountriesPanel = ({id}) => {
@@ -92,7 +94,7 @@ const CountriesPanel = ({id}) => {
     query = COUNTRIES_QUERY;
   }
 
-  const { data, loading, error }= useQuery(query, { variables: { filterInput: { continent: { eq: id } } } });
+  const { data, loading, error } = useQuery(query, { variables: { filterInput: { continent: { eq: id } } } });
 
   if (error) console.log(error);
 
@@ -101,9 +103,9 @@ const CountriesPanel = ({id}) => {
       <table className={[ Classes.HTML_TABLE, Classes.HTML_TABLE_BORDERED, Classes.HTML_TABLE_CONDENSED, Classes.HTML_TABLE_STRIPED, Classes.INTERACTIVE ].join(' ')} style={{ width: "96%", marginLeft: "2%", marginRight: "2%", paddingBottom: "2%"}}>
         <thead>
           <tr>
-            <th>Flag</th>
-            <th>Name</th>
-            <th>Capital</th>
+            {headers.map((header) => {
+              return <th>{header}</th>
+            })}
           </tr>
         </thead>
         <tbody>

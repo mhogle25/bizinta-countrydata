@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { gql, useQuery } from "@apollo/client";
 
-import { Tab, Tabs, H5, Classes } from '@blueprintjs/core';
+import { Tab, Tabs, Spinner, Classes } from '@blueprintjs/core';
 
 import CountriesPanel from './CountriesPanel';
 
@@ -23,7 +23,12 @@ const ContinentsHeader = () => {
 
   if (error) console.log(error);
 
-  if (loading) return <H5>Loading Continents...</H5>;
+  //Display a spinner while the query completes
+  if (loading) return(
+    <div style={{ minHeight: "100vh" }}>
+      <Spinner style={{ minHeight: "100vh" }}/>
+    </div>
+  );
 
   const tabsOnChange = (newTabID) => setSelectedTab(newTabID);
 
