@@ -3,7 +3,6 @@ import { Dialog, Classes /*, Tabs, Tab */} from '@blueprintjs/core';
 
 const CountryInfo = ({country}) => {
   const [ dialogOpen, setDialogOpen ] = useState(false);
-  //const [ selectedDialogTab, setSelectedDialogTab ] = useState();
 
   const handleButtonClick = () => setDialogOpen(!dialogOpen);
   const handleClose = useCallback(() => { setDialogOpen(false); }, [])

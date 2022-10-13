@@ -1,4 +1,4 @@
-import {useContext, useEffect} from 'react'
+import { useContext } from 'react'
 import { useQuery } from "@apollo/client";
 
 import { Tab, Tabs, Spinner, Classes } from '@blueprintjs/core';
@@ -11,7 +11,7 @@ import { SelectedContinentContext } from "../Manager";
 const ContinentsHeader = ({setSelectedContinent}) => {
   const { selectedContinent } = useContext(SelectedContinentContext);
   const { data, loading, error } = useQuery(CONTINENTS_QUERY);
-  useEffect(() => { console.log(selectedContinent) });
+
   if (error) console.log(error);
 
   //Display a spinner while the query completes

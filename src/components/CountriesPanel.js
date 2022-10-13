@@ -1,16 +1,16 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useQuery } from "@apollo/client"
 import { Classes } from "@blueprintjs/core"
 
 import CountryInfo from './CountryInfo'
-import { COUNTRIES_QUERY } from "../graphql/queries";
-import {SelectedContinentContext} from "../Manager";
+import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
+import { SelectedContinentContext } from "../Manager";
 
 const headers = ["Flag", "Name", "Capital"]
 
-const renderTableContent = (data, loading) => {
+const renderTableContent = (data, loading, loadingRefetch) => {
   //Return progress meters as the content of the first row while loading
-  if (loading) return (
+  if (loading || loadingRefetch) return (
     <tr>
       {headers.map((header) => {
         return (
@@ -28,11 +28,24 @@ const renderTableContent = (data, loading) => {
 }
 
 const CountriesPanel = () => {
+  //State to determine when a refetch is loading data
+  const [ loadingRefetch, setLoadingRefetch ] = useState(false);
   const { selectedContinent } = useContext(SelectedContinentContext);
-  useEffect(() => { console.log(selectedContinent)});
+
+  const { data, loading, error, refetch } = useQuery(COUNTRIES_BY_CONTINENT_QUERY, { variables: { filterInput: { }}})
 
   useEffect(
-    () => { refetch({ filterInput: { continent: { eq: selectedContinent }}}).then()},
+    () => {
+      let variables;
+      if (selectedContinent === "WO") {
+        variables = { filterInput: { }};
+      } else {
+        variables = { filterInput: { continent: { eq: selectedContinent }}};
+      }
+      //Indicate that a refetch is occurring so that loading indicators can be displayed
+      setLoadingRefetch(true);
+      refetch(variables).then(() => setLoadingRefetch(false));  //When fetched, indicate that loading is complete
+    },
     [selectedContinent, refetch]
   );
 
@@ -49,7 +62,7 @@ const CountriesPanel = () => {
           </tr>
         </thead>
         <tbody>
-        {renderTableContent(data, loading)}
+        {renderTableContent(data, loading, loadingRefetch)}
         </tbody>
       </table>
     </div>

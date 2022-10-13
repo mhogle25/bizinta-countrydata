@@ -36,29 +36,3 @@ export const COUNTRIES_BY_CONTINENT_QUERY = gql`
     }
   }
 `
-
-//Queries for all countries in the DB
-export const COUNTRIES_QUERY = gql`
-  query GetAllCountries {
-    countries {
-      code
-      name
-      native
-      phone
-      continent {
-        code
-        name
-      }
-      capital
-      currency
-      languages {
-        code
-        name
-        native
-        rtl
-      }
-      emoji
-      emojiU
-    }
-  }
-`
