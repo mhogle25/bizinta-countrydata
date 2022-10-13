@@ -1,26 +1,17 @@
-import { useState } from 'react';
-import { gql, useQuery } from "@apollo/client";
+import {useContext, useEffect} from 'react'
+import { useQuery } from "@apollo/client";
 
 import { Tab, Tabs, Spinner, Classes } from '@blueprintjs/core';
 
-import CountriesPanel from './CountriesPanel';
-
-//GQL query for basic continent info
-const CONTINENTS_QUERY = gql`
-    query GetAllContinents {
-      continents {
-        code
-        name
-      }
-    }
-`
+import { CONTINENTS_QUERY } from "../graphql/queries";
+import { SelectedContinentContext } from "../Manager";
 
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
-const ContinentsHeader = () => {
+const ContinentsHeader = ({setSelectedContinent}) => {
+  const { selectedContinent } = useContext(SelectedContinentContext);
   const { data, loading, error } = useQuery(CONTINENTS_QUERY);
-  const [ selectedTab, setSelectedTab ] = useState("WO");
-
+  useEffect(() => { console.log(selectedContinent) });
   if (error) console.log(error);
 
   //Display a spinner while the query completes
@@ -30,22 +21,22 @@ const ContinentsHeader = () => {
     </div>
   );
 
-  const tabsOnChange = (newTabID) => setSelectedTab(newTabID);
+  const tabsOnChange = (newTabID) => setSelectedContinent(newTabID);
 
   return (
     <div className="Header">
-        <Tabs id="header-tabs" large onChange={tabsOnChange} selectedTabId={selectedTab}>
+        <Tabs id="header-tabs" large onChange={tabsOnChange} selectedTabId={selectedContinent}>
           <div/>
-          <Tab key="world-panel" id="WO" title="World" panel={<CountriesPanel id="WO"/>} panelClassName="world-panel"/>
+          <Tab key="world-panel" id="WO" title="World"/>
           { data && data.continents.map((continent) => {
             //Create a unique key and class name for each continent
             const key = continent.name.replace(/\s/g, "").toLowerCase();
             return (
-              <Tab key={key} id={continent.code} title={continent.name} panel={<CountriesPanel id={continent.code}/>} panelClassName={key + '-panel'}/>
+              <Tab key={key} id={continent.code} title={continent.name}/>
             )
           })}
           <Tabs.Expander/>
-          <input className={Classes.INPUT} type="text" placeholder="Search..." />
+          <input className={ Classes.INPUT } type="text" placeholder="Search..." />
           <div/>
         </Tabs>
     </div>

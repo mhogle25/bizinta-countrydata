@@ -1,70 +1,10 @@
-import { useQuery, gql } from "@apollo/client"
+import { useContext, useEffect } from "react";
+import { useQuery } from "@apollo/client"
 import { Classes } from "@blueprintjs/core"
 
-import "@blueprintjs/table/lib/css/table.css";
-import "@blueprintjs/popover2/lib/css/blueprint-popover2.css";
-
 import CountryInfo from './CountryInfo'
-
-//Queries for a list of countries based on the continent code passed
-const COUNTRIES_BY_CONTINENT_QUERY = gql`
-  query GetCountriesFromContinent($filterInput: CountryFilterInput!) {
-    countries(filter: $filterInput) {
-      code
-      name
-      native
-      phone
-      continent {
-        code
-        name
-      }
-      capital
-      currency
-      languages {
-        code
-        name
-        native
-        rtl
-      }
-      emoji
-      emojiU
-      states {
-        code
-        name
-      }
-    }
-  }
-`
-
-//Queries for all countries in the DB
-const COUNTRIES_QUERY = gql`
-  query GetAllCountries {
-    countries {
-      code
-      name
-      native
-      phone
-      continent {
-        code
-        name
-      }
-      capital
-      currency
-      languages {
-        code
-        name
-        native
-        rtl
-      }
-      emoji
-      emojiU
-      states {
-        code
-        name
-      }
-    }
-  }
-`
+import { COUNTRIES_QUERY } from "../graphql/queries";
+import {SelectedContinentContext} from "../Manager";
 
 const headers = ["Flag", "Name", "Capital"]
 
@@ -74,9 +14,9 @@ const renderTableContent = (data, loading) => {
     <tr>
       {headers.map((header) => {
         return (
-          <td>
-            <div className={Classes.PROGRESS_BAR}>
-              <div className={Classes.PROGRESS_METER} style={{ width: "100%"}}></div>
+          <td key={header}>
+            <div className={ Classes.PROGRESS_BAR }>
+              <div className={ Classes.PROGRESS_METER } style={{ width: "100%"}}></div>
             </div>
           </td>
         )
@@ -84,17 +24,17 @@ const renderTableContent = (data, loading) => {
     </tr>
   )
 
-  return data && data.countries.map((country) => { return <CountryInfo country={country}/> });
+  return data && data.countries.map((country) => { return <CountryInfo key={country.name} country={country}/> });
 }
 
-const CountriesPanel = ({id}) => {
-  //If this panel is a child of the World tab, query all countries
-  let query = COUNTRIES_BY_CONTINENT_QUERY;
-  if (id === "WO") {
-    query = COUNTRIES_QUERY;
-  }
+const CountriesPanel = () => {
+  const { selectedContinent } = useContext(SelectedContinentContext);
+  useEffect(() => { console.log(selectedContinent)});
 
-  const { data, loading, error } = useQuery(query, { variables: { filterInput: { continent: { eq: id } } } });
+  useEffect(
+    () => { refetch({ filterInput: { continent: { eq: selectedContinent }}}).then()},
+    [selectedContinent, refetch]
+  );
 
   if (error) console.log(error);
 
@@ -104,7 +44,7 @@ const CountriesPanel = ({id}) => {
         <thead>
           <tr>
             {headers.map((header) => {
-              return <th>{header}</th>
+              return <th key={header}>{header}</th>
             })}
           </tr>
         </thead>

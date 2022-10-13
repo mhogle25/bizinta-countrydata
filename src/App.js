@@ -1,24 +1,16 @@
-import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client"
-//import { Classes } from "@blueprintjs/core"
+import { ApolloProvider } from "@apollo/client"
 
-import "normalize.css";
-import "@blueprintjs/core/lib/css/blueprint.css";
-import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+import './App.css'
 
-import ContinentsHeader from './components/ContinentsHeader';
+import { client } from "./graphql/client";
+import Manager from "./Manager";
 
 const App = () => {
-  //The Apollo Client. Connects to an Apollo Server of country data created by trevorblades.
-  const client = new ApolloClient({
-    cache: new InMemoryCache(),
-    uri: 'https://countries.trevorblades.com'
-  });
-
   //className={["App", Classes.DARK].join(' ')}
   return (
       <div className="App" style={{/* backgroundColor: "#2f333c",*/ minHeight: "100vh"}}>
         <ApolloProvider client={client}>
-          <ContinentsHeader client={client}/>
+          <Manager/>
         </ApolloProvider>
       </div>
   );
