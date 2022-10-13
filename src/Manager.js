@@ -1,12 +1,11 @@
 import CountriesPanel from "./components/CountriesPanel";
 import ContinentsHeader from "./components/ContinentsHeader";
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext } from "react";
 
 export const SelectedContinentContext = createContext(null)
 
 const Manager = () => {
   const [ selectedContinent, setSelectedContinent ] = useState("WO");
-  useEffect(() => { console.log(selectedContinent)}, [selectedContinent]);
 
   return (
     <SelectedContinentContext.Provider value={{ selectedContinent }}>

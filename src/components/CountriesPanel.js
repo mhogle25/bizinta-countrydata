@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { useQuery } from "@apollo/client"
+import { useContext, useEffect } from "react";
+import { useLazyQuery } from "@apollo/client"
 import { Classes } from "@blueprintjs/core"
 
 import CountryInfo from './CountryInfo'
@@ -16,7 +16,10 @@ const renderTableContent = (data, loading, loadingRefetch) => {
         return (
           <td key={header}>
             <div className={ Classes.PROGRESS_BAR }>
-              <div className={ Classes.PROGRESS_METER } style={{ width: "100%"}}></div>
+              <div
+                className={ Classes.PROGRESS_METER }
+                style={{ width: "100%"}}
+              />
             </div>
           </td>
         )
@@ -29,31 +32,36 @@ const renderTableContent = (data, loading, loadingRefetch) => {
 
 const CountriesPanel = () => {
   //State to determine when a refetch is loading data
-  const [ loadingRefetch, setLoadingRefetch ] = useState(false);
   const { selectedContinent } = useContext(SelectedContinentContext);
 
-  const { data, loading, error, refetch } = useQuery(COUNTRIES_BY_CONTINENT_QUERY, { variables: { filterInput: { }}})
+  const options = selectedContinent === "WO" ? { variables: { filterInput: {}}} : { variables: { filterInput: { continent: { eq: selectedContinent }}}};
+
+  const [
+    fetchCountries,
+    {
+      data,
+      loading,
+      error
+    }
+  ] = useLazyQuery(COUNTRIES_BY_CONTINENT_QUERY, options);
+
 
   useEffect(
     () => {
-      let variables;
-      if (selectedContinent === "WO") {
-        variables = { filterInput: { }};
-      } else {
-        variables = { filterInput: { continent: { eq: selectedContinent }}};
-      }
-      //Indicate that a refetch is occurring so that loading indicators can be displayed
-      setLoadingRefetch(true);
-      refetch(variables).then(() => setLoadingRefetch(false));  //When fetched, indicate that loading is complete
+      //console.log(`Countries Query (Continent: ${ selectedContinent }`)
+      fetchCountries(selectedContinent === "WO" ? { variables: { filterInput: {}}} : { variables: { filterInput: { continent: { eq: selectedContinent }}}}).then();
     },
-    [selectedContinent, refetch]
+  [selectedContinent, fetchCountries]
   );
 
   if (error) console.log(error);
 
   return (
     <div className="CountriesPanel">
-      <table className={[ Classes.HTML_TABLE, Classes.HTML_TABLE_BORDERED, Classes.HTML_TABLE_CONDENSED, Classes.HTML_TABLE_STRIPED, Classes.INTERACTIVE ].join(' ')} style={{ width: "96%", marginLeft: "2%", marginRight: "2%", paddingBottom: "2%"}}>
+      <table
+        className={[ Classes.HTML_TABLE, Classes.HTML_TABLE_BORDERED, Classes.HTML_TABLE_CONDENSED, Classes.HTML_TABLE_STRIPED, Classes.INTERACTIVE ].join(' ')}
+        style={{ width: "96%", marginLeft: "2%", marginRight: "2%", paddingBottom: "2%"}}
+      >
         <thead>
           <tr>
             {headers.map((header) => {
@@ -62,7 +70,7 @@ const CountriesPanel = () => {
           </tr>
         </thead>
         <tbody>
-        {renderTableContent(data, loading, loadingRefetch)}
+        {renderTableContent(data, loading)}
         </tbody>
       </table>
     </div>

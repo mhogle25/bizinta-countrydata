@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import { useQuery } from "@apollo/client";
+import {useContext, useEffect} from 'react'
+import { useLazyQuery } from "@apollo/client";
 
 import { Tab, Tabs, Spinner, Classes } from '@blueprintjs/core';
 
@@ -10,7 +10,19 @@ import { SelectedContinentContext } from "../Manager";
 //Additionally provides a search bar for filtering countries in the active Panel
 const ContinentsHeader = ({setSelectedContinent}) => {
   const { selectedContinent } = useContext(SelectedContinentContext);
-  const { data, loading, error } = useQuery(CONTINENTS_QUERY);
+  const [
+    fetchContinents,
+    {
+      data,
+      loading,
+      error
+    }
+  ] = useLazyQuery(CONTINENTS_QUERY);
+
+  useEffect(() => {
+    //console.log("Continent Query")
+    fetchContinents().then(() => {if (error) console.log(error)})
+  }, [fetchContinents, error])
 
   if (error) console.log(error);
 
