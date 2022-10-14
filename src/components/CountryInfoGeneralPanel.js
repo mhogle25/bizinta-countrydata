@@ -1,4 +1,4 @@
-const CountryInfoPanel = ({country}) => {
+const CountryInfoGeneralPanel = ({country}) => {
 
   const createRow = (header, value) => {
     return (
@@ -10,7 +10,7 @@ const CountryInfoPanel = ({country}) => {
   }
 
   return (
-    <div className="CountryInfoPanel">
+    <div className="CountryInfoGeneralPanel">
       <table
         className="bp4-html-table bp4-html-table-striped"
         style={{width:"100%", marginLeft:"auto", marginRight:"auto"}}
@@ -29,4 +29,4 @@ const CountryInfoPanel = ({country}) => {
   );
 }
 
-export default CountryInfoPanel;
+export default CountryInfoGeneralPanel;

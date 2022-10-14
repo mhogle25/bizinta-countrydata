@@ -7,9 +7,9 @@ import { SelectedContinentContext } from "../Manager";
 
 const headers = ["Flag", "Name", "Capital"]
 
-const renderTableContent = (data, loading, loadingRefetch) => {
+const renderTableContent = (data, loading) => {
   //Return progress meters as the content of the first row while loading
-  if (loading || loadingRefetch) return (
+  if (loading) return (
     <tr>
       {headers.map((header) => {
         return (
@@ -48,9 +48,13 @@ const CountriesPanel = () => {
   useEffect(
     () => {
       //console.log(`Countries Query (Continent: ${ selectedContinent }`)
-      fetchCountries(selectedContinent === "WO" ? { variables: { filterInput: {}}} : { variables: { filterInput: { continent: { eq: selectedContinent }}}}).then();
+      fetchCountries(
+        selectedContinent === "WO" ? { variables: { filterInput: {}}} : { variables: { filterInput: { continent: { eq: selectedContinent }}}}
+      ).then(() => {
+        if (error) console.log(error);
+      });
     },
-  [selectedContinent, fetchCountries]
+  [selectedContinent, fetchCountries, error]
   );
 
   if (error) console.log(error);

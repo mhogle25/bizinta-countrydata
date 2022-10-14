@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { Dialog, Tabs, Tab } from '@blueprintjs/core';
-import CountryInfoPanel from "./CountryInfoPanel";
+import CountryInfoGeneralPanel from "./CountryInfoGeneralPanel";
 import CountryInfoLanguagePanel from "./CountryInfoLanguagePanel";
 
 const CountryInfo = ({country}) => {
@@ -36,7 +36,7 @@ const CountryInfo = ({country}) => {
             <Tab
               key="general-info-tab"
               id="GI" title="General Info"
-              panel={<CountryInfoPanel country={country}/>}
+              panel={<CountryInfoGeneralPanel country={country}/>}
             />
             {renderLanguagesTab()}
           </Tabs>
