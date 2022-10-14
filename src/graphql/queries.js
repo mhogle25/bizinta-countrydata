@@ -33,6 +33,10 @@ export const COUNTRIES_BY_CONTINENT_QUERY = gql`
       }
       emoji
       emojiU
+      states {
+        code
+        name
+      }
     }
   }
 `

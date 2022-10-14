@@ -1,11 +1,27 @@
 import { useState, useCallback } from "react";
-import { Dialog, Classes /*, Tabs, Tab */} from '@blueprintjs/core';
+import { Dialog, Tabs, Tab } from '@blueprintjs/core';
+import CountryInfoPanel from "./CountryInfoPanel";
+import CountryInfoLanguagePanel from "./CountryInfoLanguagePanel";
 
 const CountryInfo = ({country}) => {
+  const [ selectedTab, setSelectedTab ] = useState();
   const [ dialogOpen, setDialogOpen ] = useState(false);
 
   const handleButtonClick = () => setDialogOpen(!dialogOpen);
   const handleClose = useCallback(() => { setDialogOpen(false); }, [])
+
+  const renderLanguagesTab = () => {
+    if (country.languages && country.languages.length > 0) return (
+      <Tab
+        key="languages-tab"
+        id="LA"
+        title="Languages"
+        panel={<CountryInfoLanguagePanel list={country.languages}/>}
+      />
+    )
+
+    return null;
+  }
 
   return (
     <>
@@ -15,8 +31,15 @@ const CountryInfo = ({country}) => {
         <td>{country.capital}</td>
       </tr>
       <Dialog isOpen={dialogOpen} onClose={handleClose}>
-        <div className={ Classes.DIALOG_BODY }>
-          Test
+        <div className="bp4-dialog-body">
+          <Tabs id="country-dialog-tabs" onChange={(newTabID) => setSelectedTab(newTabID)} selectedTabId={selectedTab}>
+            <Tab
+              key="general-info-tab"
+              id="GI" title="General Info"
+              panel={<CountryInfoPanel country={country}/>}
+            />
+            {renderLanguagesTab()}
+          </Tabs>
         </div>
       </Dialog>
     </>

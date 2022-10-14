@@ -1,7 +1,7 @@
 import {useContext, useEffect} from 'react'
 import { useLazyQuery } from "@apollo/client";
 
-import { Tab, Tabs, Spinner, Classes } from '@blueprintjs/core';
+import { Tab, Tabs, Spinner } from '@blueprintjs/core';
 
 import { CONTINENTS_QUERY } from "../graphql/queries";
 import { SelectedContinentContext } from "../Manager";
@@ -48,7 +48,7 @@ const ContinentsHeader = ({setSelectedContinent}) => {
             )
           })}
           <Tabs.Expander/>
-          <input className={ Classes.INPUT } type="text" placeholder="Search..." />
+          <input className="bp4-input" type="text" placeholder="Search..." />
           <div/>
         </Tabs>
     </div>

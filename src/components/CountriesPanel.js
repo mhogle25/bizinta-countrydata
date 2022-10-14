@@ -1,6 +1,5 @@
 import { useContext, useEffect } from "react";
 import { useLazyQuery } from "@apollo/client"
-import { Classes } from "@blueprintjs/core"
 
 import CountryInfo from './CountryInfo'
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
@@ -15,9 +14,9 @@ const renderTableContent = (data, loading, loadingRefetch) => {
       {headers.map((header) => {
         return (
           <td key={header}>
-            <div className={ Classes.PROGRESS_BAR }>
+            <div className="bp4-progress-bar">
               <div
-                className={ Classes.PROGRESS_METER }
+                className={ 'bp4-progress-meter' }
                 style={{ width: "100%"}}
               />
             </div>
@@ -59,7 +58,7 @@ const CountriesPanel = () => {
   return (
     <div className="CountriesPanel">
       <table
-        className={[ Classes.HTML_TABLE, Classes.HTML_TABLE_BORDERED, Classes.HTML_TABLE_CONDENSED, Classes.HTML_TABLE_STRIPED, Classes.INTERACTIVE ].join(' ')}
+        className="bp4-html-table bp4-html-table-bordered bp4-html-table-condensed bp4-html-table-striped bp4-interactive"
         style={{ width: "96%", marginLeft: "2%", marginRight: "2%", paddingBottom: "2%"}}
       >
         <thead>
