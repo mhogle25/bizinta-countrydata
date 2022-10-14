@@ -7,7 +7,7 @@ import { CONTINENTS_QUERY } from "../graphql/queries";
 
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
-const ContinentsHeader = ({selectedContinent, setSelectedContinent}) => {
+const ContinentsHeader = ({ selectedContinent, setSelectedContinent }) => {
   const [
     fetchContinents,
     {
@@ -19,7 +19,7 @@ const ContinentsHeader = ({selectedContinent, setSelectedContinent}) => {
 
   useEffect(() => {
     //console.log("Continent Query")
-    fetchContinents().then(() => {if (error) console.log(error)})
+    fetchContinents().then(() => { if (error) console.log(error) })
   }, [fetchContinents, error])
 
   if (error) console.log(error);
@@ -35,14 +35,13 @@ const ContinentsHeader = ({selectedContinent, setSelectedContinent}) => {
 
   return (
     <div className="Header">
-        <Tabs id="header-tabs" large onChange={tabsOnChange} selectedTabId={selectedContinent}>
+        <Tabs id="header-tabs" large onChange={ tabsOnChange } selectedTabId={ selectedContinent }>
           <div/>
           <Tab key="world-panel" id="WO" title="World"/>
           { data && data.continents.map((continent) => {
             //Create a unique key and class name for each continent
-            const key = continent.name.replace(/\s/g, "").toLowerCase();
             return (
-              <Tab key={key} id={continent.code} title={continent.name}/>
+              <Tab key={ continent.name.replace(/\s/g, "").toLowerCase() + '-panel' } id={ continent.code } title={ continent.name }/>
             )
           })}
           <Tabs.Expander/>

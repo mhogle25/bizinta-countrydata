@@ -2,7 +2,7 @@ import { ApolloProvider } from "@apollo/client"
 
 import './App.css'
 
-import { client } from "./graphql/client";
+import { client } from "../graphql/client";
 import Manager from "./Manager";
 
 const App = () => {

@@ -1,4 +1,4 @@
-const CountryInfoGeneralPanel = ({country}) => {
+const CountryInfoGeneralPanel = ({ country }) => {
 
   const createRow = (header, value) => {
     return (
