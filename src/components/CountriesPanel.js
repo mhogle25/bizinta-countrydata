@@ -1,9 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useLazyQuery } from "@apollo/client"
 
 import CountryInfo from './CountryInfo'
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
-import { SelectedContinentContext } from "../Manager";
 
 const headers = ["Flag", "Name", "Capital"]
 
@@ -29,9 +28,9 @@ const renderTableContent = (data, loading) => {
   return data && data.countries.map((country) => { return <CountryInfo key={country.name} country={country}/> });
 }
 
-const CountriesPanel = () => {
+const CountriesPanel = ({selectedContinent}) => {
   //State to determine when a refetch is loading data
-  const { selectedContinent } = useContext(SelectedContinentContext);
+  //const { selectedContinent } = useContext(SelectedContinentContext);
 
   const options = selectedContinent === "WO" ? { variables: { filterInput: {}}} : { variables: { filterInput: { continent: { eq: selectedContinent }}}};
 

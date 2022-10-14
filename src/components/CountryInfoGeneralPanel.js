@@ -20,7 +20,7 @@ const CountryInfoGeneralPanel = ({country}) => {
         {country.name ? createRow("Name", country.name) : null}
         {country.native ? createRow("Native Spelling", country.native) : null}
         {country.phone ? createRow("Phone Extension", country.phone) : null}
-        {country.continent !== null && country.continent.name !== null ? createRow("Continent", country.continent.name) : null}
+        {(country.continent !== null) && (country.continent.name !== null) ? createRow("Continent", country.continent.name) : null}
         {country.capital ? createRow("Capital", country.capital) : null}
         {country.currency ? createRow("Currency", country.currency) : null}
         </tbody>

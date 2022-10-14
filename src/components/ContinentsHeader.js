@@ -1,15 +1,13 @@
-import {useContext, useEffect} from 'react'
+import { useEffect } from 'react'
 import { useLazyQuery } from "@apollo/client";
 
 import { Tab, Tabs, Spinner } from '@blueprintjs/core';
 
 import { CONTINENTS_QUERY } from "../graphql/queries";
-import { SelectedContinentContext } from "../Manager";
 
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
-const ContinentsHeader = ({setSelectedContinent}) => {
-  const { selectedContinent } = useContext(SelectedContinentContext);
+const ContinentsHeader = ({selectedContinent, setSelectedContinent}) => {
   const [
     fetchContinents,
     {
