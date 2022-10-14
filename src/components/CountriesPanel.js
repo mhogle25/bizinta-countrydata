@@ -83,7 +83,7 @@ const CountriesPanel = ({ selectedContinent }) => {
           </tr>
         </thead>
         <tbody>
-        {renderTableContent(data, loading, setSelectedCountry, setDialogOpen)}
+        { renderTableContent(data, loading, setSelectedCountry, setDialogOpen) }
         </tbody>
       </table>
       { selectedCountry ? <CountryInfoDialog selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} /> : null }

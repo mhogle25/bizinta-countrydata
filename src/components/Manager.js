@@ -7,8 +7,8 @@ const Manager = () => {
 
   return (
     <div className={ "Manager" }>
-      <ContinentsHeader selectedContinent={selectedContinent} setSelectedContinent={setSelectedContinent}/>
-      <CountriesPanel selectedContinent={selectedContinent}/>
+      <ContinentsHeader selectedContinent={ selectedContinent } setSelectedContinent={ setSelectedContinent }/>
+      <CountriesPanel selectedContinent={ selectedContinent }/>
     </div>
   )
 }

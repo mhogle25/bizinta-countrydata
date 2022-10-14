@@ -8,8 +8,8 @@ import Manager from "./Manager";
 const App = () => {
   //className={["App", Classes.DARK].join(' ')}
   return (
-      <div className="App" style={{/* backgroundColor: "#2f333c",*/ minHeight: "100vh"}}>
-        <ApolloProvider client={client}>
+      <div className="App" style={{/* backgroundColor: "#2f333c",*/ minHeight: "100vh" }}>
+        <ApolloProvider client={ client }>
           <Manager/>
         </ApolloProvider>
       </div>
