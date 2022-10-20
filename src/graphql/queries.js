@@ -17,6 +17,17 @@ export const COUNTRIES_BY_CONTINENT_QUERY = gql`
     countries(filter: $filterInput) {
       code
       name
+      capital
+      emoji
+    }
+  }
+`
+
+export const COUNTRY_BY_CODE_QUERY = gql`
+  query GetCountryByCode($code: ID!) {
+    country(code: $code) {
+      code
+      name
       native
       phone
       continent {
