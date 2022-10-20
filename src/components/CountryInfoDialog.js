@@ -1,10 +1,10 @@
-import {useState, useCallback, useEffect} from "react";
-import {Dialog, Tabs, Tab, Spinner} from '@blueprintjs/core';
+import { useState, useCallback, useEffect } from "react";
+import { Dialog, Tabs, Tab, Spinner } from '@blueprintjs/core';
 import CountryInfoGeneralPanel from "./CountryInfoGeneralPanel";
 import CountryInfoLanguagePanel from "./CountryInfoLanguagePanel";
 import { createSearchParams } from "react-router-dom";
-import { useLazyQuery } from '@apollo/client'
-import { COUNTRY_BY_CODE_QUERY } from '../graphql/queries'
+import { useLazyQuery } from '@apollo/client';
+import { COUNTRY_BY_CODE_QUERY } from '../graphql/queries';
 
 const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialogOpen }) => {
   //The currently selected tab state of the Dialog. Initialized to show General Info
@@ -32,7 +32,7 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
       }
     },
     [dialogOpen, fetchCountry, searchParams, error]
-  )
+  );
 
   const handleClose = useCallback(
     () => {
@@ -66,6 +66,7 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
     );
 
     if (!data) return null;
+    if (!data.country) throw new Error('Invalid country code provided');
 
     return (
       <Tabs id="country-dialog-tabs" onChange={(newTabID) => setSelectedTab(newTabID)} selectedTabId={selectedTab}>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useLazyQuery } from "@apollo/client"
-
-import CountryInfoDialog from './CountryInfoDialog'
+import { useLazyQuery } from "@apollo/client";
+import CountryInfoDialog from './CountryInfoDialog';
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
 import { createSearchParams } from "react-router-dom";
 
