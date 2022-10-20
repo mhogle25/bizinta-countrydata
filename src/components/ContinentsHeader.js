@@ -5,9 +5,10 @@ import { Tab, Tabs, Spinner } from '@blueprintjs/core';
 
 import { CONTINENTS_QUERY } from "../graphql/queries";
 
+import { createSearchParams } from 'react-router-dom'
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
-const ContinentsHeader = ({ selectedContinent, setSelectedContinent }) => {
+const ContinentsHeader = ({ searchParams, setSearchParams }) => {
   const [
     fetchContinents,
     {
@@ -18,7 +19,6 @@ const ContinentsHeader = ({ selectedContinent, setSelectedContinent }) => {
   ] = useLazyQuery(CONTINENTS_QUERY);
 
   useEffect(() => {
-    //console.log("Continent Query")
     fetchContinents().then(() => { if (error) console.log(error) })
   }, [fetchContinents, error])
 
@@ -31,23 +31,27 @@ const ContinentsHeader = ({ selectedContinent, setSelectedContinent }) => {
     </div>
   );
 
-  const tabsOnChange = (newTabID) => setSelectedContinent(newTabID);
+  const tabsOnChange = (newTabID) => {
+    //Set the URl continent parameter to the new tab id
+    setSearchParams(createSearchParams({ continent: newTabID, country: null }));
+  }
 
   return (
     <div className="Header">
-        <Tabs id="header-tabs" large onChange={ tabsOnChange } selectedTabId={ selectedContinent }>
-          <div/>
-          <Tab key="world-panel" id="WO" title="World"/>
-          { data && data.continents.map((continent) => {
-            //Create a unique key and class name for each continent
-            return (
-              <Tab key={ continent.name.replace(/\s/g, "").toLowerCase() + '-panel' } id={ continent.code } title={ continent.name }/>
-            )
-          })}
-          <Tabs.Expander/>
-          <input className="bp4-input" type="text" placeholder="Search..." />
-          <div/>
-        </Tabs>
+      <Tabs id="header-tabs" large onChange={ tabsOnChange } selectedTabId={ searchParams.get('continent') }>
+        <div/>
+        <Tab key="world-panel" id="WO" title="World"/>
+        { data && data.continents.map((continent) => {
+          //Create a unique key and class name for each continent
+          const key = continent.name.replace(/\s/g, "").toLowerCase()
+          return (
+            <Tab key={ key + '-panel' } id={ continent.code } title={ continent.name }/>
+          )
+        })}
+        <Tabs.Expander/>
+        <input className="bp4-input" type="text" placeholder="Search..." />
+        <div/>
+      </Tabs>
     </div>
   )
 }

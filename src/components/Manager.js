@@ -1,14 +1,24 @@
 import CountriesPanel from "./CountriesPanel";
 import ContinentsHeader from "./ContinentsHeader";
-import { useState } from "react";
+import { createSearchParams, useSearchParams } from "react-router-dom";
+import {useState} from "react";
 
 const Manager = () => {
-  const [ selectedContinent, setSelectedContinent ] = useState("WO");
+  //The URL parameter for which continent and country is currently selected
+  const [ searchParams, setSearchParams ] = useSearchParams(createSearchParams({ continent: "WO" }));
 
+  //Only need to give the countries panel the currently selected continent from the search params
   return (
     <div className={ "Manager" }>
-      <ContinentsHeader selectedContinent={ selectedContinent } setSelectedContinent={ setSelectedContinent }/>
-      <CountriesPanel selectedContinent={ selectedContinent }/>
+      <ContinentsHeader
+        searchParams={ searchParams }
+        setSearchParams={ setSearchParams }
+      />
+      <CountriesPanel
+        selectedContinent={ searchParams.get('continent') }
+        searchParams={ searchParams }
+        setSearchParams={ setSearchParams }
+      />
     </div>
   )
 }

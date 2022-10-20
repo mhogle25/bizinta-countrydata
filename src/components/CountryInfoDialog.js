@@ -2,17 +2,17 @@ import { useState, useCallback } from "react";
 import { Dialog, Tabs, Tab } from '@blueprintjs/core';
 import CountryInfoGeneralPanel from "./CountryInfoGeneralPanel";
 import CountryInfoLanguagePanel from "./CountryInfoLanguagePanel";
+import { createSearchParams } from "react-router-dom";
 
-const CountryInfoDialog = ({ selectedCountry, setSelectedCountry, dialogOpen, setDialogOpen }) => {
+const CountryInfoDialog = ({ selectedContinent, selectedCountry, setSearchParams, dialogOpen, setDialogOpen }) => {
   //The currently selected tab state of the Dialog. Initialized to show General Info
   const [ selectedTab, setSelectedTab ] = useState("GI");
 
   const handleClose = useCallback(
     () => {
-      setDialogOpen(false);
-      setSelectedCountry(null);
+      setSearchParams(createSearchParams({ continent: selectedContinent, country: null }));
     },
-    [setDialogOpen, setSelectedCountry]
+    [setSearchParams, selectedContinent]
   );
 
   //Conditionally renders the languages tab of the Dialog (as long as a list of languages exists, or it is greater than 0)
@@ -29,7 +29,10 @@ const CountryInfoDialog = ({ selectedCountry, setSelectedCountry, dialogOpen, se
     return null;
   }
 
+  //Only render if the selected country exists
   const renderDialog = () => {
+    if (!selectedCountry) return null;
+
     return (
       <>
         <Dialog isOpen={dialogOpen} onClose={handleClose}>

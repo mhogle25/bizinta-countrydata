@@ -1,4 +1,5 @@
 import { ApolloProvider } from "@apollo/client"
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import './App.css'
 
@@ -10,7 +11,13 @@ const App = () => {
   return (
       <div className="App" style={{/* backgroundColor: "#2f333c",*/ minHeight: "100vh" }}>
         <ApolloProvider client={ client }>
-          <Manager/>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={
+                <Manager/>
+              }/>
+            </Routes>
+          </BrowserRouter>
         </ApolloProvider>
       </div>
   );

@@ -3,10 +3,11 @@ import { useLazyQuery } from "@apollo/client"
 
 import CountryInfoDialog from './CountryInfoDialog'
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
+import { createSearchParams } from "react-router-dom";
 
 const headers = ["Flag", "Name", "Capital"]
 
-const renderTableContent = (data, loading, setCurrentCountry, setDialogOpen) => {
+const renderTableContent = (data, loading, selectedContinent, setSearchParams, setDialogOpen) => {
   //Return progress meters as the content of the first row while loading
   if (loading) return (
     <tr>
@@ -24,12 +25,15 @@ const renderTableContent = (data, loading, setCurrentCountry, setDialogOpen) => 
       })}
     </tr>
   )
-
+  //When a row is clicked, set the country field of search params to that row's country code
+  //This will trigger the useEffects below (ref 1 and 2)
   return data && data.countries.map((country) => { return (
-    <tr key={ country.code } onClick={() => {
-      setCurrentCountry(country)
-      setDialogOpen(true);
-    }}>
+    <tr
+      key={ country.code }
+      onClick={() => {
+        setSearchParams(createSearchParams({ continent: selectedContinent, country: country.code }));
+      }}
+    >
       <td>{ country.emoji }</td>
       <td>{ country.name }</td>
       <td>{ country.capital }</td>
@@ -37,14 +41,14 @@ const renderTableContent = (data, loading, setCurrentCountry, setDialogOpen) => 
   )});
 }
 
-const CountriesPanel = ({ selectedContinent }) => {
-  //State to determine when a refetch is loading data
-
-  const options = selectedContinent === "WO" ? { variables: { filterInput: {}}} : { variables: { filterInput: { continent: { eq: selectedContinent }}}};
+const CountriesPanel = ({ selectedContinent, searchParams, setSearchParams }) => {
+  const options = selectedContinent === "WO" ?
+    { variables: { filterInput: {}}} :
+    { variables: { filterInput: { continent: { eq: selectedContinent }}}};
 
   //The state that controls if the Dialog is open or not
   const [ dialogOpen, setDialogOpen ] = useState(false);
-  //The state that holds the data of the currently open country
+
   const [ selectedCountry, setSelectedCountry ] = useState(null);
 
   const [
@@ -56,10 +60,13 @@ const CountriesPanel = ({ selectedContinent }) => {
     }
   ] = useLazyQuery(COUNTRIES_BY_CONTINENT_QUERY, options);
 
+  //Query the server for the list of countries based on the selected continent
   useEffect(
     () => {
       fetchCountries(
-        selectedContinent === "WO" ? { variables: { filterInput: {}}} : { variables: { filterInput: { continent: { eq: selectedContinent }}}}
+        selectedContinent === "WO" ?
+          { variables: { filterInput: {}}} :
+          { variables: { filterInput: { continent: { eq: selectedContinent }}}}
       ).then(() => {
         if (error) console.log(error);
       });
@@ -67,6 +74,43 @@ const CountriesPanel = ({ selectedContinent }) => {
   [selectedContinent, fetchCountries, error]
   );
 
+  //[ref 1]
+  // When the country field of the search params becomes something other than null,
+  //find the corresponding country in the countries list and set the selected country
+  //to it
+  useEffect(
+    () => {
+      console.log(searchParams.get('country') === null);
+      console.log(searchParams.get('country'));
+      if (searchParams.get('country') === null) {
+        console.log('set selected country to null');
+        setSelectedCountry(null);
+        return;
+      }
+
+      if (data) {
+        data.countries.map((country) => {
+          if (country.code === searchParams.get('country')) {
+            console.log(`set selected country to ${country.name}`)
+            setSelectedCountry(country);
+          }
+          return null;
+        });
+      }
+    },
+    [searchParams, setSelectedCountry, data]
+  )
+
+  //[ref 2]
+  // When the selected country becomes something other than null,
+  //set the dialog to open
+  useEffect(
+    () => {
+      console.log(`selected country exists: ${selectedCountry !== null}`);
+      setDialogOpen(selectedCountry !== null);
+    },
+    [selectedCountry, setDialogOpen]
+    )
   if (error) console.log(error);
 
   return (
@@ -83,10 +127,16 @@ const CountriesPanel = ({ selectedContinent }) => {
           </tr>
         </thead>
         <tbody>
-        { renderTableContent(data, loading, setSelectedCountry, setDialogOpen) }
+        { renderTableContent(data, loading, selectedContinent, setSearchParams, setDialogOpen) }
         </tbody>
       </table>
-      { selectedCountry ? <CountryInfoDialog selectedCountry={selectedCountry} setSelectedCountry={setSelectedCountry} dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} /> : null }
+      <CountryInfoDialog
+        selectedContinent={ selectedContinent }
+        selectedCountry={ selectedCountry }
+        setSearchParams={ setSearchParams }
+        dialogOpen={ dialogOpen }
+        setDialogOpen={setDialogOpen}
+      />
     </div>
   )
 }

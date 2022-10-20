@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import ErrorPage from "./error-page";
+//import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+//import ErrorPage from "./error-page";
 
+/*
 const router = createBrowserRouter([
   {
     path: "/",
@@ -12,10 +13,12 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage/>
   },
 ])
+*/
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <RouterProvider router={ router }/>
+  //<RouterProvider router={ router }/>
+  <App/>
 );
 
 // If you want to start measuring performance in your app, pass a function
