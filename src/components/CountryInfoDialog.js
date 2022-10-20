@@ -4,19 +4,22 @@ import CountryInfoGeneralPanel from "./CountryInfoGeneralPanel";
 import CountryInfoLanguagePanel from "./CountryInfoLanguagePanel";
 import { createSearchParams } from "react-router-dom";
 
-const CountryInfoDialog = ({ selectedContinent, selectedCountry, setSearchParams, dialogOpen, setDialogOpen }) => {
+const CountryInfoDialog = ({ selectedCountry, selectedContinentCode, setSearchParams, dialogOpen, setDialogOpen }) => {
   //The currently selected tab state of the Dialog. Initialized to show General Info
   const [ selectedTab, setSelectedTab ] = useState("GI");
 
   const handleClose = useCallback(
     () => {
-      setSearchParams(createSearchParams({ continent: selectedContinent, country: null }));
+      setDialogOpen(false);
+      setSearchParams(createSearchParams({ continent: selectedContinentCode }));
     },
-    [setSearchParams, selectedContinent]
+    [setSearchParams, selectedContinentCode, setDialogOpen]
   );
 
   //Conditionally renders the languages tab of the Dialog (as long as a list of languages exists, or it is greater than 0)
   const renderLanguagesTab = () => {
+    if (!selectedCountry) return null;
+
     if (selectedCountry.languages && selectedCountry.languages.length > 0) return (
       <Tab
         key="languages-tab"

@@ -7,7 +7,7 @@ import { createSearchParams } from "react-router-dom";
 
 const headers = ["Flag", "Name", "Capital"]
 
-const renderTableContent = (data, loading, selectedContinent, setSearchParams, setDialogOpen) => {
+const renderTableContent = (data, loading, selectedContinentCode, setSearchParams, setSelectedCountry) => {
   //Return progress meters as the content of the first row while loading
   if (loading) return (
     <tr>
@@ -26,12 +26,14 @@ const renderTableContent = (data, loading, selectedContinent, setSearchParams, s
     </tr>
   )
   //When a row is clicked, set the country field of search params to that row's country code
-  //This will trigger the useEffects below (ref 1 and 2)
-  return data && data.countries.map((country) => { return (
+  //This will trigger the useEffect below (ref 1)
+  return data && data.countries.map((country) => {
+    return (
     <tr
       key={ country.code }
       onClick={() => {
-        setSearchParams(createSearchParams({ continent: selectedContinent, country: country.code }));
+        //Set the search params to have a country field with this country's code
+        setSearchParams(createSearchParams({ continent: selectedContinentCode, country: country.code }));
       }}
     >
       <td>{ country.emoji }</td>
@@ -41,14 +43,14 @@ const renderTableContent = (data, loading, selectedContinent, setSearchParams, s
   )});
 }
 
-const CountriesPanel = ({ selectedContinent, searchParams, setSearchParams }) => {
-  const options = selectedContinent === "WO" ?
+const CountriesPanel = ({ searchParams, setSearchParams }) => {
+  const options = searchParams.get('continent') === "WO" ?
     { variables: { filterInput: {}}} :
-    { variables: { filterInput: { continent: { eq: selectedContinent }}}};
+    { variables: { filterInput: { continent: { eq: searchParams.get('continent') }}}};
 
   //The state that controls if the Dialog is open or not
   const [ dialogOpen, setDialogOpen ] = useState(false);
-
+  //The currently selected country data
   const [ selectedCountry, setSelectedCountry ] = useState(null);
 
   const [
@@ -64,54 +66,36 @@ const CountriesPanel = ({ selectedContinent, searchParams, setSearchParams }) =>
   useEffect(
     () => {
       fetchCountries(
-        selectedContinent === "WO" ?
+        searchParams.get('continent') === "WO" ?
           { variables: { filterInput: {}}} :
-          { variables: { filterInput: { continent: { eq: selectedContinent }}}}
+          { variables: { filterInput: { continent: { eq: searchParams.get('continent') }}}}
       ).then(() => {
         if (error) console.log(error);
       });
     },
-  [selectedContinent, fetchCountries, error]
+  [searchParams, fetchCountries, error]
   );
 
   //[ref 1]
-  // When the country field of the search params becomes something other than null,
-  //find the corresponding country in the countries list and set the selected country
-  //to it
+  //Find the corresponding country to the search params country code from the data
   useEffect(
     () => {
-      console.log(searchParams.get('country') === null);
-      console.log(searchParams.get('country'));
-      if (searchParams.get('country') === null) {
-        console.log('set selected country to null');
-        setSelectedCountry(null);
-        return;
-      }
-
-      if (data) {
-        data.countries.map((country) => {
-          if (country.code === searchParams.get('country')) {
-            console.log(`set selected country to ${country.name}`)
-            setSelectedCountry(country);
-          }
-          return null;
-        });
-      }
+      if (!searchParams.has('country') || !data) return;
+      data.countries.forEach((country) => {
+        if (country.code === searchParams.get('country'))
+          setSelectedCountry(country);
+      })
     },
     [searchParams, setSelectedCountry, data]
   )
 
   //[ref 2]
-  // When the selected country becomes something other than null,
-  //set the dialog to open
+  //When the country field of the search params exists,
+  //and the selected country state exists, open the dialog
   useEffect(
-    () => {
-      console.log(`selected country exists: ${selectedCountry !== null}`);
-      setDialogOpen(selectedCountry !== null);
-    },
+    () => { if (selectedCountry) setDialogOpen(true); },
     [selectedCountry, setDialogOpen]
-    )
-  if (error) console.log(error);
+  )
 
   return (
     <div className="CountriesPanel">
@@ -127,15 +111,15 @@ const CountriesPanel = ({ selectedContinent, searchParams, setSearchParams }) =>
           </tr>
         </thead>
         <tbody>
-        { renderTableContent(data, loading, selectedContinent, setSearchParams, setDialogOpen) }
+        { renderTableContent(data, loading, searchParams.get('continent'), setSearchParams, setSelectedCountry) }
         </tbody>
       </table>
       <CountryInfoDialog
-        selectedContinent={ selectedContinent }
         selectedCountry={ selectedCountry }
+        selectedContinentCode={ searchParams.get('continent') }
         setSearchParams={ setSearchParams }
         dialogOpen={ dialogOpen }
-        setDialogOpen={setDialogOpen}
+        setDialogOpen={ setDialogOpen }
       />
     </div>
   )

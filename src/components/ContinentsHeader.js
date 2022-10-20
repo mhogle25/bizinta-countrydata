@@ -33,7 +33,7 @@ const ContinentsHeader = ({ searchParams, setSearchParams }) => {
 
   const tabsOnChange = (newTabID) => {
     //Set the URl continent parameter to the new tab id
-    setSearchParams(createSearchParams({ continent: newTabID, country: null }));
+    setSearchParams(createSearchParams({ continent: newTabID }));
   }
 
   return (
