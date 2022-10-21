@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
-import CountryInfoDialog from './CountryInfoDialog';
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
 import { createSearchParams } from "react-router-dom";
 
@@ -43,13 +42,10 @@ const renderTableContent = (data, loading, selectedContinentCode, setSearchParam
   )});
 }
 
-const CountriesPanel = ({ searchParams, setSearchParams }) => {
+const CountriesPanel = ({ searchParams, setSearchParams, setDialogOpen }) => {
   const options = searchParams.get('continent') === "WO" ?
     { variables: { filterInput: {}}} :
     { variables: { filterInput: { continent: { eq: searchParams.get('continent') }}}};
-
-  //The state that controls if the Dialog is open or not
-  const [ dialogOpen, setDialogOpen ] = useState(false);
 
   const [
     fetchCountries,
@@ -102,12 +98,6 @@ const CountriesPanel = ({ searchParams, setSearchParams }) => {
         { renderTableContent(data, loading, searchParams.get('continent'), setSearchParams) }
         </tbody>
       </table>
-      <CountryInfoDialog
-        searchParams={ searchParams }
-        setSearchParams={ setSearchParams }
-        dialogOpen={ dialogOpen }
-        setDialogOpen={ setDialogOpen }
-      />
     </div>
   )
 }

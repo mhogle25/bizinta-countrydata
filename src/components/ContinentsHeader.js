@@ -3,6 +3,7 @@ import { useLazyQuery } from "@apollo/client";
 import { Tab, Tabs, Spinner } from '@blueprintjs/core';
 import { CONTINENTS_QUERY } from "../graphql/queries";
 import { createSearchParams } from 'react-router-dom';
+import SearchInputField from "./SearchInputField";
 
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
@@ -70,7 +71,7 @@ const ContinentsHeader = ({ searchParams, setSearchParams }) => {
           )
         })}
         <Tabs.Expander/>
-        <input className="bp4-input" type="text" placeholder="Search..." />
+        <SearchInputField/>
         <div/>
       </Tabs>
     </div>
