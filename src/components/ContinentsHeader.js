@@ -7,7 +7,7 @@ import SearchInputField from "./SearchInputField";
 
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
-const ContinentsHeader = ({ searchParams, setSearchParams }) => {
+const ContinentsHeader = ({ searchParams, setSearchParams, setSearchInputFieldValue }) => {
   const [ continentCodes, setContinentCodes ] = useState(null);
 
   const [
@@ -71,7 +71,7 @@ const ContinentsHeader = ({ searchParams, setSearchParams }) => {
           )
         })}
         <Tabs.Expander/>
-        <SearchInputField/>
+        <SearchInputField setSearchInputFieldValue={ setSearchInputFieldValue }/>
         <div/>
       </Tabs>
     </div>

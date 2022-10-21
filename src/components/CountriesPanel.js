@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
 import { createSearchParams } from "react-router-dom";
+import { observer } from "mobx-react-lite";
 
 const headers = ["Flag", "Name", "Capital"]
 
-const renderTableContent = (data, loading, selectedContinentCode, setSearchParams) => {
+const renderTableContent = (data, loading, selectedContinentCode, setSearchParams, searchInputFieldValue) => {
   //Return progress meters as the content of the first row while loading
   if (loading) return (
     <tr>
@@ -27,22 +28,26 @@ const renderTableContent = (data, loading, selectedContinentCode, setSearchParam
   //When a row is clicked, set the country field of search params to that row's country code
   //This will trigger the useEffect below (ref 1)
   return data && data.countries.map((country) => {
-    return (
-    <tr
-      key={ country.code }
-      onClick={() => {
-        //Set the search params to have a country field with this country's code
-        setSearchParams(createSearchParams({ continent: selectedContinentCode, country: country.code }));
-      }}
-    >
-      <td>{ country.emoji }</td>
-      <td>{ country.name }</td>
-      <td>{ country.capital }</td>
-    </tr>
-  )});
+    //This code will filter out entries in the table based on search specifications
+    if (country.name.toLowerCase().includes(searchInputFieldValue.toLowerCase())) return (
+      <tr
+        key={ country.code }
+        onClick={() => {
+          //Set the search params to have a country field with this country's code
+          setSearchParams(createSearchParams({ continent: selectedContinentCode, country: country.code }));
+        }}
+      >
+        <td>{ country.emoji }</td>
+        <td>{ country.name }</td>
+        <td>{ country.capital }</td>
+      </tr>
+    )
+
+    return null;
+  });
 }
 
-const CountriesPanel = ({ searchParams, setSearchParams, setDialogOpen }) => {
+const CountriesPanel = observer(({ searchParams, setSearchParams, searchInputFieldValue, setDialogOpen }) => {
   const options = searchParams.get('continent') === "WO" ?
     { variables: { filterInput: {}}} :
     { variables: { filterInput: { continent: { eq: searchParams.get('continent') }}}};
@@ -95,11 +100,11 @@ const CountriesPanel = ({ searchParams, setSearchParams, setDialogOpen }) => {
           </tr>
         </thead>
         <tbody>
-        { renderTableContent(data, loading, searchParams.get('continent'), setSearchParams) }
+        { renderTableContent(data, loading, searchParams.get('continent'), setSearchParams, searchInputFieldValue) }
         </tbody>
       </table>
     </div>
   )
-}
+});
 
 export default CountriesPanel;
