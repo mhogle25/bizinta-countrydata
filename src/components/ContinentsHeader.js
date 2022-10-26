@@ -7,7 +7,9 @@ import SearchInputField from "./SearchInputField";
 
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
-const ContinentsHeader = ({ searchParams, setSearchParams, setSearchInputFieldValue }) => {
+const ContinentsHeader = ({ searchParams, setSearchParams }) => {
+  //A list of all the continent codes retrieved by the query
+  //Used for error handling
   const [ continentCodes, setContinentCodes ] = useState(null);
 
   const [
@@ -40,18 +42,22 @@ const ContinentsHeader = ({ searchParams, setSearchParams, setSearchInputFieldVa
   //Display a spinner while the query completes
   if (loading) {
     return(
-      <div style={{ minHeight: "100vh" }}>
-        <Spinner style={{ minHeight: "100vh" }}/>
+      <div style={{ minHeight: '100vh' }}>
+        <Spinner style={{ minHeight: '100vh' }}/>
       </div>
     );
-  } else {
-    //When loading is finished, if the continent code provided
-    //does not match any continent codes, throw an error
-    if (!continentCodes)
-      return null;
-    if (!continentCodes.has(searchParams.get('continent')))
-      throw new Error('Invalid continent code provided');
   }
+
+  let continentCode = '';
+  if (searchParams.has('continent'))
+    continentCode = searchParams.get('continent');
+
+  //When loading is finished, if the continent code provided
+  //does not match any continent codes, throw an error
+  if (!continentCodes)
+    return null;
+  if (!continentCodes.has(continentCode))
+    throw new Error('Invalid continent code provided');
 
   const tabsOnChange = (newTabID) => {
     //Set the URl continent parameter to the new tab id
@@ -60,7 +66,7 @@ const ContinentsHeader = ({ searchParams, setSearchParams, setSearchInputFieldVa
 
   return (
     <div className="Header">
-      <Tabs id="header-tabs" large onChange={ tabsOnChange } selectedTabId={ searchParams.get('continent') }>
+      <Tabs id="header-tabs" large onChange={ tabsOnChange } selectedTabId={ continentCode }>
         <div/>
         <Tab key="world-panel" id="WO" title="World"/>
         { data && data.continents.map((continent) => {
@@ -71,7 +77,9 @@ const ContinentsHeader = ({ searchParams, setSearchParams, setSearchInputFieldVa
           )
         })}
         <Tabs.Expander/>
-        <SearchInputField setSearchInputFieldValue={ setSearchInputFieldValue }/>
+        <SearchInputField
+          setSearchParams={ setSearchParams }
+        />
         <div/>
       </Tabs>
     </div>

@@ -1,6 +1,7 @@
 import { useRef } from "react";
+import { createSearchParams } from "react-router-dom";
 
-const SearchInputField = ({ setSearchInputFieldValue }) => {
+const SearchInputField = ({ setSearchParams }) => {
   const inputField = useRef();
 
   return (
@@ -11,7 +12,10 @@ const SearchInputField = ({ setSearchInputFieldValue }) => {
         type="text"
         placeholder="Search..."
         onChange={(event) => {
-          setSearchInputFieldValue(event.target.value)
+          setSearchParams(createSearchParams({ continent: 'WO', input: event.target.value }));
+        }}
+        onFocus={(event) => {
+          setSearchParams(createSearchParams({ continent: 'WO', input: event.target.value }));
         }}
       />
     </div>
