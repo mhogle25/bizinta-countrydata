@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { createSearchParams } from "react-router-dom";
 
+const FAST_TYPING_TIMEOUT = 500;
+
 const SearchInputField = ({ searchParams, setSearchParams }) => {
   const inputField = useRef();
 
@@ -12,7 +14,12 @@ const SearchInputField = ({ searchParams, setSearchParams }) => {
         type="text"
         placeholder="Search..."
         onChange={(event) => {
-          setSearchParams(createSearchParams({ continent: searchParams.get('continent'), input: event.target.value }));
+          setTimeout(
+            () => {
+              setSearchParams(createSearchParams({ continent: searchParams.get('continent'), input: event.target.value }));
+            },
+            FAST_TYPING_TIMEOUT
+          )
         }}
         onFocus={(event) => {
           setSearchParams(createSearchParams({ continent: searchParams.get('continent'), input: event.target.value }));
