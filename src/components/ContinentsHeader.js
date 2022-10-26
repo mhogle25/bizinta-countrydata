@@ -65,7 +65,7 @@ const ContinentsHeader = ({ searchParams, setSearchParams }) => {
   }
 
   return (
-    <div className="Header">
+    <div className="ContinentsHeader">
       <Tabs id="header-tabs" large onChange={ tabsOnChange } selectedTabId={ continentCode }>
         <div/>
         <Tab key="world-panel" id="WO" title="World"/>

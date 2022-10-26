@@ -82,13 +82,13 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
 
   const renderDialog = () => {
     return (
-      <>
+      <div className="CountryInfoDialog">
         <Dialog isOpen={dialogOpen} onClose={handleClose}>
           <div className="bp4-dialog-body">
             {renderTabs()}
           </div>
         </Dialog>
-      </>
+      </div>
     )
   }
 

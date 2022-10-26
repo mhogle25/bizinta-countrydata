@@ -23,7 +23,7 @@ const Manager = () => {
 
 
   return (
-    <div className={ "Manager" }>
+    <div className="Manager">
       <ContinentsHeader
         searchParams={ searchParams }
         setSearchParams={ setSearchParams }
