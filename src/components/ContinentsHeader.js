@@ -78,6 +78,7 @@ const ContinentsHeader = ({ searchParams, setSearchParams }) => {
         })}
         <Tabs.Expander/>
         <SearchInputField
+          searchParams={ searchParams }
           setSearchParams={ setSearchParams }
         />
         <div/>
