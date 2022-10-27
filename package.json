@@ -5,6 +5,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.0",
     "@blueprintjs/core": "^4.11.2",
+    "@blueprintjs/docs-theme": "^4.4.13",
     "@blueprintjs/table": "^4.7.2",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

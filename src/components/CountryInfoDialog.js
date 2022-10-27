@@ -73,7 +73,7 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
         <Tab
           key="general-info-tab"
           id="GI" title="General Info"
-          panel={<CountryInfoGeneralPanel country={ data.country }/>}
+          panel={<CountryInfoGeneralPanel country={ data.country } />}
         />
         { renderLanguagesTab() }
       </Tabs>

@@ -11,7 +11,7 @@ const SearchInputField = ({ searchParams, setSearchParams }) => {
       <input
         className="bp4-input"
         ref={inputField}
-        type="text"
+        type="search"
         placeholder="Search..."
         onChange={(event) => {
           setTimeout(

@@ -31,7 +31,6 @@ const Manager = () => {
       <CountriesPanel
         searchParams={ searchParams }
         setSearchParams={ setSearchParams }
-        setDialogOpen={ setDialogOpen }
       />
       <CountryInfoDialog
         searchParams={ searchParams }

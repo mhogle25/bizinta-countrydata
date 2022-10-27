@@ -2,8 +2,9 @@ import { useLazyQuery } from "@apollo/client";
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
 import { createSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import { COUNTRY_STORAGE_KEY, URL_KEY } from "../imports/macros";
 
-const headers = ["Flag", "Name", "Capital"]
+const headers = ["Flag", "Name", "Capital", "URL"]
 
 const CountriesPanel = ({ searchParams, setSearchParams }) => {
   const [
@@ -64,19 +65,23 @@ const renderTableContent = (data, loading, selectedContinentCode, inputSearchPar
   //This will trigger the useEffect (ref 1)
   return data && data.countries.map((country) => {
     //This code will filter out entries in the table based on search specifications
-    if (country.name.toLowerCase().includes(inputSearchParam.toLowerCase())) return (
-      <tr
-        key={ country.code }
-        onClick={() => {
-          //Set the search params to have a country field with this country's code
-          setSearchParams(createSearchParams({ continent: selectedContinentCode, country: country.code }));
-        }}
-      >
-        <td>{ country.emoji }</td>
-        <td>{ country.name }</td>
-        <td>{ country.capital }</td>
-      </tr>
-    )
+    if (country.name.toLowerCase().includes(inputSearchParam.toLowerCase())) {
+      const countryURL = localStorage.getItem(`${ COUNTRY_STORAGE_KEY }/${ country.code }/${ URL_KEY }`);
+      const onClick= () => {
+        //Set the search params to have a country field with this country's code
+        setSearchParams(createSearchParams({ continent: selectedContinentCode, country: country.code }));
+      }
+      return (
+        <tr
+          key={ country.code }
+        >
+          <td onClick={onClick}>{ country.emoji }</td>
+          <td onClick={onClick}>{ country.name }</td>
+          <td onClick={onClick}>{ country.capital }</td>
+          <td><a href={ countryURL }>{ countryURL }</a></td>
+        </tr>
+      )
+    }
 
     return null;
   });
