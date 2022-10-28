@@ -24,7 +24,7 @@ const EditableURLCard = ({ countryCode }) => {
   }
 
   const renderError = () => {
-    return showError ? <p style={{ color:"red", marginTop:"10px"}}>Invalid URL. URLs must be http or https.</p> : null;
+    return showError ? <p style={{ color:"red", marginTop:"10px" }}>Invalid URL. URLs must be http or https.</p> : null;
   }
 
   const renderEdit = () => {
@@ -34,7 +34,7 @@ const EditableURLCard = ({ countryCode }) => {
           {renderHeading()}
           <input
             className="bp4-input bp4-fill"
-            value={data}
+            value={ data }
             onChange={(event) => {
               setData(event.target.value);
             }}
@@ -42,7 +42,7 @@ const EditableURLCard = ({ countryCode }) => {
           <Button
             onClick={() => {
               if (isValidUrl(data)) {
-                localStorage.setItem(`${COUNTRY_STORAGE_KEY}/${countryCode}/${URL_KEY}`, data);
+                localStorage.setItem(`${ COUNTRY_STORAGE_KEY }/${countryCode}/${ URL_KEY }`, data);
                 setShowError(false);
                 setClicked(false);
               } else {
@@ -72,14 +72,14 @@ const EditableURLCard = ({ countryCode }) => {
     return (
       <div>
         <Card
-          interactive={true}
+          interactive={ true }
           onClick={() => {
             setClicked(!clicked);
           }}
         >
           {renderHeading()}
           <p>
-            {data === "" ? <i>Enter {URL_KEY}...</i> : data}
+            { data === "" ? <i>Enter { URL_KEY }...</i> : data }
           </p>
         </Card>
       </div>
@@ -94,7 +94,7 @@ const EditableURLCard = ({ countryCode }) => {
 }
 
 const refreshData = (countryCode, setData) => {
-  const newData = localStorage.getItem(`${COUNTRY_STORAGE_KEY}/${countryCode}/${URL_KEY}`);
+  const newData = localStorage.getItem(`${ COUNTRY_STORAGE_KEY }/${countryCode}/${ URL_KEY }`);
   if (newData)
     setData(newData);
   else
