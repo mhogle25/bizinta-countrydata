@@ -5,6 +5,7 @@ import CountryInfoLanguagePanel from "./CountryInfoLanguagePanel";
 import { createSearchParams } from "react-router-dom";
 import { useLazyQuery } from '@apollo/client';
 import { COUNTRY_BY_CODE_QUERY } from '../graphql/queries';
+import CountryInfoContactsPanel from "./CountryInfoContactsPanel";
 
 const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialogOpen }) => {
   //The currently selected tab state of the Dialog. Initialized to show General Info
@@ -72,10 +73,17 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
       <Tabs id="country-dialog-tabs" onChange={(newTabID) => setSelectedTab(newTabID)} selectedTabId={selectedTab}>
         <Tab
           key="general-info-tab"
-          id="GI" title="General Info"
+          id="GI"
+          title="General Info"
           panel={<CountryInfoGeneralPanel country={ data.country } />}
         />
         { renderLanguagesTab() }
+        <Tab
+          key="contacts-tab"
+          id="CO"
+          title="Contacts"
+          panel={<CountryInfoContactsPanel countryCode={ searchParams.get('country') }/>}
+        />
       </Tabs>
     )
   }

@@ -1,4 +1,4 @@
-import { Button, Card } from "@blueprintjs/core";
+import { Button, Card, H6 } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
 import { COMMENT_KEY, COUNTRY_STORAGE_KEY } from "../imports/macros";
 
@@ -16,13 +16,37 @@ const EditableCommentCard = ({ countryCode }) => {
   )
 
   const renderHeading = () => {
-    return <h6 className="bp4-heading">{heading}</h6>;
+    return <H6 className="bp4-heading">{heading}</H6>;
   }
 
-  const renderEdit = () => {
+  const renderButtons = () => {
+    return(
+      <div style={{ marginTop: "10px" }}>
+        <Button
+          onClick={() => {
+            localStorage.setItem(`${COUNTRY_STORAGE_KEY}/${countryCode}/${COMMENT_KEY}`, data);
+            setClicked(false)
+          }}
+        >
+          Update
+        </Button>
+        <Button
+          onClick={() => {
+            refreshData(countryCode, setData);
+            setClicked(false);
+          }}
+          intent="danger"
+        >
+          Cancel
+        </Button>
+      </div>
+    )
+  }
+
+  const renderForm = () => {
     return (
-      <div>
-        <Card>
+      <Card>
+        <form>
           {renderHeading()}
           <textarea
             className="bp4-input bp4-fill"
@@ -31,48 +55,30 @@ const EditableCommentCard = ({ countryCode }) => {
               setData(event.target.value);
             }}
           />
-          <Button
-            onClick={() => {
-              localStorage.setItem(`${COUNTRY_STORAGE_KEY}/${countryCode}/${COMMENT_KEY}`, data);
-              setClicked(false)
-            }}
-          >
-            Update
-          </Button>
-          <Button
-            onClick={() => {
-              refreshData(countryCode, setData);
-              setClicked(false);
-            }}
-            intent="danger"
-          >
-            Cancel
-          </Button>
-        </Card>
-      </div>
+          {renderButtons()}
+        </form>
+      </Card>
     )
   }
 
   const renderText = () => {
     return (
-      <div>
-        <Card
-          interactive={true}
-          onClick={() => {
-            setClicked(!clicked);
-          }}
-        >
-          {renderHeading()}
-          <p>
-            {data === "" ? <i>Enter {COMMENT_KEY}...</i> : data}
-          </p>
-        </Card>
-      </div>
+      <Card
+        interactive={true}
+        onClick={() => {
+          setClicked(!clicked);
+        }}
+      >
+        {renderHeading()}
+        <p>
+          {data === "" ? <i>Enter {COMMENT_KEY}...</i> : data}
+        </p>
+      </Card>
     )
   }
 
   const render = () => {
-    return clicked ? renderEdit() : renderText();
+    return clicked ? renderForm() : renderText();
   }
 
   return render();
