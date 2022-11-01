@@ -2,9 +2,10 @@ import { useLazyQuery } from "@apollo/client";
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
 import { createSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-import { COUNTRY_STORAGE_KEY, URL_KEY } from "../imports/macros";
+import { COUNTRY_STORAGE_KEY, URL_KEY } from "../utilities/macros";
+import {generateContactsKey} from "../utilities/local-storage";
 
-const headers = ["Flag", "Name", "Capital", "URL"]
+const headers = ["Flag", "Name", "Capital", "URL", "Contacts"]
 
 const CountriesPanel = ({ searchParams, setSearchParams }) => {
   const [
@@ -57,6 +58,12 @@ const CountriesPanel = ({ searchParams, setSearchParams }) => {
   )
 };
 
+const numberOfContacts = (countryCode) => {
+  const data = localStorage.getItem(generateContactsKey(countryCode));
+  const deserializedData = JSON.parse(data);
+  return deserializedData ? deserializedData.length : 0;
+}
+
 const renderTableContent = (data, loading, selectedContinentCode, inputSearchParam, setSearchParams) => {
   //Return progress meters as the content of the first row while loading
   if (loading) return renderTableLoading();
@@ -79,6 +86,7 @@ const renderTableContent = (data, loading, selectedContinentCode, inputSearchPar
           <td onClick={onClick}>{ country.name }</td>
           <td onClick={onClick}>{ country.capital }</td>
           <td><a href={ countryURL }>{ countryURL }</a></td>
+          <td>{numberOfContacts(country.code)}</td>
         </tr>
       )
     }

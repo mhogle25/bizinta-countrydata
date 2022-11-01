@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { COUNTRY_STORAGE_KEY, CONTACTS_KEY } from "../imports/macros";
 import { H5 } from "@blueprintjs/core";
 import ContactsList from './ContactsList'
 import AddContactUtility from "./AddContactUtility";
+import { generateContactsKey } from "../utilities/local-storage";
 
 const CountryInfoContactsPanel = ({ countryCode }) => {
   const [ contactsData, setContactsData ] = useState(null);
 
   useEffect(
     () => {
-      const key = `${COUNTRY_STORAGE_KEY}/${countryCode}/${CONTACTS_KEY}`;
+      const key = generateContactsKey(countryCode);
       if (!contactsData) {
         const data = localStorage.getItem(key);
         const deserializedData = data ? JSON.parse(data) : [];

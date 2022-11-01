@@ -1,6 +1,6 @@
 import { Button, Card, H6 } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
-import { COUNTRY_STORAGE_KEY, URL_KEY } from "../imports/macros";
+import { COUNTRY_STORAGE_KEY, URL_KEY } from "../utilities/macros";
 
 const heading = "URL: ";
 

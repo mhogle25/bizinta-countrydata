@@ -84,7 +84,7 @@ const AddContactUtility = ({ contactsData, setContactsData }) => {
       </Card>
     )
   }
-  
+
   const renderAddButton = () => {
     return(
       <button

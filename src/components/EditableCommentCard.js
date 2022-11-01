@@ -1,6 +1,6 @@
 import { Button, Card, H6 } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
-import { COMMENT_KEY, COUNTRY_STORAGE_KEY } from "../imports/macros";
+import { COMMENT_KEY, COUNTRY_STORAGE_KEY } from "../utilities/macros";
 
 const heading = "Comment: "
 
