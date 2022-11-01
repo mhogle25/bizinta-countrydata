@@ -8,6 +8,10 @@ const isValidUrl = (url = "") => {
   return url.startsWith("http://") || url.startsWith("https://") || url === "";
 };
 
+const generateKey = (countryCode) => {
+  return `${ COUNTRY_STORAGE_KEY }/${countryCode}/${ URL_KEY }`
+}
+
 const EditableURLCard = ({ countryCode }) => {
   const [ clicked, setClicked ] = useState(false);
   const [ data, setData ] = useState("");
@@ -34,7 +38,7 @@ const EditableURLCard = ({ countryCode }) => {
         <Button
           onClick={() => {
             if (isValidUrl(data)) {
-              localStorage.setItem(`${ COUNTRY_STORAGE_KEY }/${countryCode}/${ URL_KEY }`, data);
+              localStorage.setItem(generateKey(countryCode), data);
               setShowError(false);
               setClicked(false);
             } else {
@@ -101,7 +105,7 @@ const EditableURLCard = ({ countryCode }) => {
 }
 
 const refreshData = (countryCode, setData) => {
-  const newData = localStorage.getItem(`${ COUNTRY_STORAGE_KEY }/${countryCode}/${ URL_KEY }`);
+  const newData = localStorage.getItem(generateKey(countryCode));
   if (newData)
     setData(newData);
   else

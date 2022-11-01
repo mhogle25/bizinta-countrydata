@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { H5 } from "@blueprintjs/core";
 import ContactsList from './ContactsList'
 import AddContactUtility from "./AddContactUtility";
 import { generateContactsKey } from "../utilities/local-storage";
@@ -25,7 +24,6 @@ const CountryInfoContactsPanel = ({ countryCode }) => {
 
   return (
     <div>
-      <H5>Contacts</H5>
       <ContactsList
         contactsData={contactsData}
       />

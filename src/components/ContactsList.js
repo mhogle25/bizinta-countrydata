@@ -1,8 +1,5 @@
-import { H6, Icon } from "@blueprintjs/core";
-
-const generateKey = (pre) => {
-  return `${ pre }_${ new Date().getTime() }`;
-}
+import { Icon } from "@blueprintjs/core";
+import ContactEntry from "./ContactEntry";
 
 const ContactsList = ({ contactsData }) => {
   const renderNoContacts = () => {
@@ -16,26 +13,26 @@ const ContactsList = ({ contactsData }) => {
     )
   }
 
-  const renderContact = (name, email, comment) => {
+  const renderContact = (key, name, email, comment) => {
     return (
-      <div key={generateKey(email)}>
-        <H6>Name:</H6>
-        <p>{name}</p>
-        <H6>Email:</H6>
-        <p>{email}</p>
-        <H6>Comment:</H6>
-        <p>{comment}</p>
-      </div>
+      <ContactEntry
+        key={key}
+        name={name}
+        email={email}
+        comment={comment}
+      />
     )
   }
 
+  let i = 0;
   const renderContactsList = () => {
     if (!contactsData || contactsData.length < 1)
       return renderNoContacts();
 
     return (
       contactsData.map((contactData) => {
-        return renderContact(contactData.name, contactData.email, contactData.comment)
+        i++;
+        return renderContact(generateKey(contactData.email, i), contactData.name, contactData.email, contactData.comment)
       })
     )
   }
@@ -45,6 +42,10 @@ const ContactsList = ({ contactsData }) => {
       {renderContactsList()}
     </div>
   )
+}
+
+const generateKey = (pre, index) => {
+  return `${ pre }_${ new Date().getTime() + index }`;
 }
 
 export default ContactsList;

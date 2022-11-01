@@ -4,6 +4,10 @@ import { COMMENT_KEY, COUNTRY_STORAGE_KEY } from "../utilities/macros";
 
 const heading = "Comment: "
 
+const generateKey = (countryCode) => {
+  return `${COUNTRY_STORAGE_KEY}/${countryCode}/${COMMENT_KEY}`
+}
+
 const EditableCommentCard = ({ countryCode }) => {
   const [ clicked, setClicked ] = useState(false);
   const [ data, setData ] = useState("");
@@ -24,7 +28,7 @@ const EditableCommentCard = ({ countryCode }) => {
       <div style={{ marginTop: "10px" }}>
         <Button
           onClick={() => {
-            localStorage.setItem(`${COUNTRY_STORAGE_KEY}/${countryCode}/${COMMENT_KEY}`, data);
+            localStorage.setItem(generateKey(countryCode), data);
             setClicked(false)
           }}
         >
@@ -85,7 +89,7 @@ const EditableCommentCard = ({ countryCode }) => {
 }
 
 const refreshData = (countryCode, setData) => {
-  const newData = localStorage.getItem(`${COUNTRY_STORAGE_KEY}/${countryCode}/${COMMENT_KEY}`);
+  const newData = localStorage.getItem(generateKey(countryCode));
   if (newData)
     setData(newData);
   else
