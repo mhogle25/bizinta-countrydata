@@ -1,17 +1,23 @@
-const ContactEntry = ({ name, email, comment }) => {
+const ContactEntry = ({ contactData, setCurrentContactInfo }) => {
   return (
     <div
       className="bp4-card bp4-interactive"
-      onClick={() => {
-        console.log(comment);
+      onClick={(event) => {
+        setCurrentContactInfo(contactData)
+      }}
+      onMouseOver={(event) => {
+
+      }}
+      onMouseOut={(event) => {
+
       }}
     >
       <div style={{ display: "flex" }}>
         <span style={{ flex: "1", textAlign: "left" }}>
-          {name}
+          {contactData.name}
         </span>
         <span style={{ flex: "1", textAlign: "right" }}>
-          {email}
+          {contactData.email}
         </span>
       </div>
     </div>
