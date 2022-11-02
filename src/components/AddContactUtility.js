@@ -2,7 +2,7 @@ import { Icon } from "@blueprintjs/core";
 import { useState } from "react";
 import UpdateContactUtility from "./UpdateContactUtility";
 
-const AddContactUtility = ({ contactsData, setContactsData }) => {
+const AddContactUtility = ({ contactsData, setContactsData, onAdd }) => {
   const [ edit, setEdit ] = useState(false);
 
   const renderAddButton = () => {
@@ -24,7 +24,9 @@ const AddContactUtility = ({ contactsData, setContactsData }) => {
         <UpdateContactUtility
           confirmMessage="Add Contact"
           onConfirm={(newContact) => {
-            setContactsData([...contactsData, newContact])
+            const list = [...contactsData, newContact];
+            setContactsData(list);
+            onAdd(list);
             setEdit(!edit);
           }}
           onCancel={() => {

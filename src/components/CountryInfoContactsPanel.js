@@ -5,7 +5,7 @@ import { generateContactsKey } from "../utilities/local-storage";
 import ContactInfo from "./ContactInfo";
 import UpdateContactUtility from "./UpdateContactUtility";
 
-const CountryInfoContactsPanel = ({ countryCode }) => {
+const CountryInfoContactsPanel = ({ searchParams }) => {
   const [ contactsData, setContactsData ] = useState(null);
   //The state for the currently displayed contact info. If null, the list should be displayed
   const [ currentContactInfo, setCurrentContactInfo ] = useState(null);
@@ -14,18 +14,12 @@ const CountryInfoContactsPanel = ({ countryCode }) => {
 
   useEffect(
     () => {
-      const key = generateContactsKey(countryCode);
-      if (!contactsData) {
-        const data = localStorage.getItem(key);
-        const deserializedData = data ? JSON.parse(data) : [];
-        setContactsData(deserializedData ? deserializedData : []);
-      }
-
-      if (contactsData && contactsData.length > 0) {
-        localStorage.setItem(key, JSON.stringify(contactsData));
-      }
+      const key = generateContactsKey(searchParams.get('country'));
+      const data = localStorage.getItem(key);
+      const deserializedData = data ? JSON.parse(data) : [];
+      setContactsData(deserializedData ? deserializedData : []);
     },
-    [contactsData, setContactsData, countryCode]
+    [setContactsData, searchParams]
   );
 
   const renderInfo = () => {
@@ -39,6 +33,7 @@ const CountryInfoContactsPanel = ({ countryCode }) => {
           const list = [...contactsData];
           list[index] = newContact;
           setContactsData(list);
+          localStorage.setItem(generateContactsKey(searchParams.get('country')), JSON.stringify(list));
           setEditContactInfo(!editContactInfo)
         }}
         onCancel={() => {
@@ -57,6 +52,7 @@ const CountryInfoContactsPanel = ({ countryCode }) => {
           const list = [...contactsData];
           list.splice(index, 1);
           setContactsData(list);
+          localStorage.setItem(generateContactsKey(searchParams.get('country')), JSON.stringify(list));
           setCurrentContactInfo(null);
         }}
         currentContactInfo={currentContactInfo}
@@ -81,6 +77,7 @@ const CountryInfoContactsPanel = ({ countryCode }) => {
       <AddContactUtility
         contactsData={contactsData}
         setContactsData={setContactsData}
+        onAdd={(list) => localStorage.setItem(generateContactsKey(searchParams.get('country')), JSON.stringify(list))}
       />
     )
   }

@@ -82,7 +82,7 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
           key="contacts-tab"
           id="CO"
           title="Contacts"
-          panel={<CountryInfoContactsPanel countryCode={ searchParams.get('country') }/>}
+          panel={<CountryInfoContactsPanel searchParams={ searchParams }/>}
         />
       </Tabs>
     )

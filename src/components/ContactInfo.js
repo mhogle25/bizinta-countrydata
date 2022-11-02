@@ -47,7 +47,10 @@ const ContactInfo = ({ onEdit, onDelete, currentContactInfo, setCurrentContactIn
           </Button>
           <Button
             intent="danger"
-            onClick={onDelete}
+            onClick={() => {
+              
+              onDelete();
+            }}
           >
             <Icon icon="trash"/>
           </Button>
