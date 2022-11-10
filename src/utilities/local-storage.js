@@ -1,5 +1,11 @@
-import {CONTACTS_KEY, COUNTRY_STORAGE_KEY} from "./macros";
+export function countryContactsKey(countryCode) {
+  return `countries/${ countryCode }/contacts`;
+}
 
-export const generateContactsKey = (countryCode) => {
-  return `${COUNTRY_STORAGE_KEY}/${countryCode}/${CONTACTS_KEY}`
+export function countryUrlKey(countryCode) {
+  return `countries/${ countryCode }/url`
+}
+
+export function countryCommentKey(countryCode) {
+  return `countries/${ countryCode }/comment`;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ContactsList from './ContactsList'
 import AddContactUtility from "./AddContactUtility";
-import { generateContactsKey } from "../utilities/local-storage";
+import { countryContactsKey } from "../utilities/local-storage";
 import ContactInfo from "./ContactInfo";
 import UpdateContactUtility from "./UpdateContactUtility";
 
@@ -14,7 +14,7 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
 
   useEffect(
     () => {
-      const key = generateContactsKey(searchParams.get('country'));
+      const key = countryContactsKey(searchParams.get('country'));
       const data = localStorage.getItem(key);
       const deserializedData = data ? JSON.parse(data) : [];
       setContactsData(deserializedData ? deserializedData : []);
@@ -33,7 +33,7 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
           const list = [...contactsData];
           list[index] = newContact;
           setContactsData(list);
-          localStorage.setItem(generateContactsKey(searchParams.get('country')), JSON.stringify(list));
+          localStorage.setItem(countryContactsKey(searchParams.get('country')), JSON.stringify(list));
           setEditContactInfo(!editContactInfo)
         }}
         onCancel={() => {
@@ -52,7 +52,7 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
           const list = [...contactsData];
           list.splice(index, 1);
           setContactsData(list);
-          localStorage.setItem(generateContactsKey(searchParams.get('country')), JSON.stringify(list));
+          localStorage.setItem(countryContactsKey(searchParams.get('country')), JSON.stringify(list));
           setCurrentContactInfo(null);
         }}
         currentContactInfo={currentContactInfo}
@@ -77,7 +77,7 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
       <AddContactUtility
         contactsData={contactsData}
         setContactsData={setContactsData}
-        onAdd={(list) => localStorage.setItem(generateContactsKey(searchParams.get('country')), JSON.stringify(list))}
+        onAdd={(list) => localStorage.setItem(countryContactsKey(searchParams.get('country')), JSON.stringify(list))}
       />
     )
   }

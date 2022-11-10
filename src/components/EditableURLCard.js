@@ -1,6 +1,6 @@
 import { Button, Card, H6 } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
-import { COUNTRY_STORAGE_KEY, URL_KEY } from "../utilities/macros";
+import { countryUrlKey } from "../utilities/local-storage";
 
 const heading = "URL: ";
 
@@ -8,9 +8,6 @@ const isValidUrl = (url = "") => {
   return url.startsWith("http://") || url.startsWith("https://") || url === "";
 };
 
-const generateKey = (countryCode) => {
-  return `${ COUNTRY_STORAGE_KEY }/${countryCode}/${ URL_KEY }`
-}
 
 const EditableURLCard = ({ countryCode }) => {
   const [ clicked, setClicked ] = useState(false);
@@ -38,7 +35,7 @@ const EditableURLCard = ({ countryCode }) => {
         <Button
           onClick={() => {
             if (isValidUrl(data)) {
-              localStorage.setItem(generateKey(countryCode), data);
+              localStorage.setItem(countryUrlKey(countryCode), data);
               setShowError(false);
               setClicked(false);
             } else {
@@ -91,7 +88,7 @@ const EditableURLCard = ({ countryCode }) => {
       >
         {renderHeading()}
         <p>
-          { data === "" ? <i>Enter { URL_KEY }...</i> : data }
+          { data === "" ? <i>Enter URL...</i> : data }
         </p>
       </Card>
     )
@@ -105,7 +102,7 @@ const EditableURLCard = ({ countryCode }) => {
 }
 
 const refreshData = (countryCode, setData) => {
-  const newData = localStorage.getItem(generateKey(countryCode));
+  const newData = localStorage.getItem(countryUrlKey(countryCode));
   if (newData)
     setData(newData);
   else
