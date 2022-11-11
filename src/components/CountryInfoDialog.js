@@ -45,12 +45,14 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
 
   //Conditionally renders the languages tab of the Dialog (as long as a list of languages exists, or it is greater than 0)
   const renderLanguagesTab = () => {
-    if (data.country.languages && data.country.languages.length > 0) return (
+    let { languages } = data.country;
+
+    if (languages && languages.length > 0) return (
       <Tab
         key="languages-tab"
         id="LA"
         title="Languages"
-        panel={<CountryInfoLanguagePanel list={ data.country.languages }/>}
+        panel={<CountryInfoLanguagePanel languages={ languages }/>}
       />
     )
     return null;

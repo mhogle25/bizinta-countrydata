@@ -1,10 +1,9 @@
-const CountryInfoLanguagePanel = ({ list }) => {
+import { HTMLTable } from "@blueprintjs/core";
+
+function CountryInfoLanguagePanel({ languages }) {
   return (
     <div className="CountryInfoLanguagePanel">
-      <table
-        className="bp4-html-table bp4-html-table-bordered bp4-html-table-condensed bp4-html-table-striped"
-        style={{ width:"100%", marginLeft:"auto", marginRight:"auto" }}
-      >
+      <HTMLTable bordered striped condensed style={{ width: "100%" }}>
         <thead>
           <tr>
             <th>Name</th>
@@ -12,18 +11,19 @@ const CountryInfoLanguagePanel = ({ list }) => {
             <th>Right to Left</th>
           </tr>
         </thead>
+
         <tbody>
-        {list.map((language) => {
+        { languages.map((language) => {
           return (
-            <tr key={language.name.toLowerCase() + '-language-info'}>
-              <td>{language.name}</td>
-              <td>{language.native}</td>
-              <td>{language.rtl ? "Yes" : "No"}</td>
+            <tr key={ language.name }>
+              <td>{ language.name }</td>
+              <td>{ language.native }</td>
+              <td>{ language.rtl ? "Yes" : "No"}</td>
             </tr>
           )
         })}
         </tbody>
-      </table>
+      </HTMLTable>
     </div>
   )
 }
