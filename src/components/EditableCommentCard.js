@@ -1,19 +1,14 @@
 import { Button, Card, H6 } from "@blueprintjs/core";
-import { useEffect, useState } from "react";
-import { countryCommentKey } from "../utilities/local-storage";
+import { useState } from "react";
+import { useCountryComment } from "../utilities/local-storage";
 
 const heading = "Comment: "
 
 const EditableCommentCard = ({ countryCode }) => {
+  let [ comment, setComment ] = useCountryComment(countryCode);
   const [ clicked, setClicked ] = useState(false);
-  const [ data, setData ] = useState("");
+  const [ data, setData ] = useState(comment);
 
-  useEffect(
-    () => {
-      refreshData(countryCode, setData);
-    },
-    [countryCode, setData]
-  )
 
   const renderHeading = () => {
     return <H6 className="bp4-heading">{heading}</H6>;
@@ -24,7 +19,7 @@ const EditableCommentCard = ({ countryCode }) => {
       <div style={{ marginTop: "10px" }}>
         <Button
           onClick={() => {
-            localStorage.setItem(countryCommentKey(countryCode), data);
+            setComment(data);
             setClicked(false)
           }}
         >
@@ -32,7 +27,7 @@ const EditableCommentCard = ({ countryCode }) => {
         </Button>
         <Button
           onClick={() => {
-            refreshData(countryCode, setData);
+            setData(comment);
             setClicked(false);
           }}
           intent="danger"
@@ -82,14 +77,6 @@ const EditableCommentCard = ({ countryCode }) => {
   }
 
   return render();
-}
-
-const refreshData = (countryCode, setData) => {
-  const newData = localStorage.getItem(countryCommentKey(countryCode));
-  if (newData)
-    setData(newData);
-  else
-    setData("");
 }
 
 export default EditableCommentCard;

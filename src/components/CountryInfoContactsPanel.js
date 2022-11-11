@@ -1,26 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ContactsList from './ContactsList'
 import AddContactUtility from "./AddContactUtility";
-import { countryContactsKey } from "../utilities/local-storage";
+import { useCountryContacts } from "../utilities/local-storage";
 import ContactInfo from "./ContactInfo";
 import UpdateContactUtility from "./UpdateContactUtility";
 
 const CountryInfoContactsPanel = ({ searchParams }) => {
-  const [ contactsData, setContactsData ] = useState(null);
+  let [ contacts, setContacts ] = useCountryContacts(searchParams.get('country'));
   //The state for the currently displayed contact info. If null, the list should be displayed
   const [ currentContactInfo, setCurrentContactInfo ] = useState(null);
   //The flag that determines if a contact info is being edited
   const [ editContactInfo, setEditContactInfo ] = useState(false);
 
-  useEffect(
-    () => {
-      const key = countryContactsKey(searchParams.get('country'));
-      const data = localStorage.getItem(key);
-      const deserializedData = data ? JSON.parse(data) : [];
-      setContactsData(deserializedData ? deserializedData : []);
-    },
-    [setContactsData, searchParams]
-  );
+
 
   const renderInfo = () => {
     if (editContactInfo) return (
@@ -28,12 +20,11 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
         defaultContact={currentContactInfo}
         confirmMessage="Update Contact"
         onConfirm={(newContact) => {
-          const index = contactsData.indexOf(currentContactInfo);
+          const index = contacts.indexOf(currentContactInfo);
           setCurrentContactInfo(newContact);
-          const list = [...contactsData];
+          const list = [...contacts];
           list[index] = newContact;
-          setContactsData(list);
-          localStorage.setItem(countryContactsKey(searchParams.get('country')), JSON.stringify(list));
+          setContacts(list);
           setEditContactInfo(!editContactInfo)
         }}
         onCancel={() => {
@@ -48,11 +39,10 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
           setEditContactInfo(!editContactInfo)
         }}
         onDelete={() => {
-          const index = contactsData.indexOf(currentContactInfo);
-          const list = [...contactsData];
+          const index = contacts.indexOf(currentContactInfo);
+          const list = [...contacts];
           list.splice(index, 1);
-          setContactsData(list);
-          localStorage.setItem(countryContactsKey(searchParams.get('country')), JSON.stringify(list));
+          setContacts(list);
           setCurrentContactInfo(null);
         }}
         currentContactInfo={currentContactInfo}
@@ -65,7 +55,7 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
     if (currentContactInfo) return renderInfo();
 
     return <ContactsList
-      contactsData={contactsData}
+      contactsData={contacts}
       setCurrentContactInfo={setCurrentContactInfo}
     />
   }
@@ -74,11 +64,7 @@ const CountryInfoContactsPanel = ({ searchParams }) => {
     if (currentContactInfo) return null;
 
     return (
-      <AddContactUtility
-        contactsData={contactsData}
-        setContactsData={setContactsData}
-        onAdd={(list) => localStorage.setItem(countryContactsKey(searchParams.get('country')), JSON.stringify(list))}
-      />
+      <AddContactUtility contacts={ contacts } setContacts={ setContacts } />
     )
   }
 

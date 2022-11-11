@@ -2,8 +2,7 @@ import { useLazyQuery } from "@apollo/client";
 import { COUNTRIES_BY_CONTINENT_QUERY } from "../graphql/queries";
 import { createSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-
-import { countryContactsKey, countryUrlKey } from "../utilities/local-storage";
+import { useCountryContacts, useCountryUrl } from "../utilities/local-storage";
 
 const headers = ["Flag", "Name", "Capital", "URL", "Contacts"]
 
@@ -58,11 +57,21 @@ const CountriesPanel = ({ searchParams, setSearchParams }) => {
   )
 };
 
-const numberOfContacts = (countryCode) => {
-  const data = localStorage.getItem(countryContactsKey(countryCode));
-  const deserializedData = JSON.parse(data);
-  return deserializedData ? deserializedData.length : 0;
-}
+const CountryRow = ({ country, handleClick }) => {
+  let { code, emoji, name, capital } = country;
+  let [ url ] = useCountryUrl(code);
+  let [ contacts ] = useCountryContacts(code);
+
+  return (
+      <tr>
+        <td onClick={ handleClick }>{ emoji }</td>
+        <td onClick={ handleClick }>{ name }</td>
+        <td onClick={ handleClick }>{ capital }</td>
+        <td><a href={ url }>{ url }</a></td>
+        <td onClick={ handleClick }>{ contacts.length }</td>
+      </tr>
+    )
+};
 
 const renderTableContent = (data, loading, selectedContinentCode, inputSearchParam, setSearchParams) => {
   //Return progress meters as the content of the first row while loading
@@ -73,21 +82,12 @@ const renderTableContent = (data, loading, selectedContinentCode, inputSearchPar
   return data && data.countries.map((country) => {
     //This code will filter out entries in the table based on search specifications
     if (country.name.toLowerCase().includes(inputSearchParam.toLowerCase())) {
-      const countryURL = localStorage.getItem(countryUrlKey(country.code));
-      const onClick= () => {
+      const onClick = () => {
         //Set the search params to have a country field with this country's code
         setSearchParams(createSearchParams({ continent: selectedContinentCode, country: country.code }));
       }
       return (
-        <tr
-          key={ country.code }
-        >
-          <td onClick={onClick}>{ country.emoji }</td>
-          <td onClick={onClick}>{ country.name }</td>
-          <td onClick={onClick}>{ country.capital }</td>
-          <td><a href={ countryURL }>{ countryURL }</a></td>
-          <td onClick={onClick}>{numberOfContacts(country.code)}</td>
-        </tr>
+        <CountryRow key={ country.code } country={ country } handleClick={ onClick } />
       )
     }
 

@@ -1,6 +1,6 @@
 import { Button, Card, H6 } from "@blueprintjs/core";
-import { useEffect, useState } from "react";
-import { countryUrlKey } from "../utilities/local-storage";
+import { useState } from "react";
+import { useCountryUrl } from "../utilities/local-storage";
 
 const heading = "URL: ";
 
@@ -10,16 +10,11 @@ const isValidUrl = (url = "") => {
 
 
 const EditableURLCard = ({ countryCode }) => {
-  const [ clicked, setClicked ] = useState(false);
-  const [ data, setData ] = useState("");
-  const [ showError, setShowError ] = useState(false);
+  let [ url, setUrl ] = useCountryUrl(countryCode);
 
-  useEffect(
-    () => {
-      refreshData(countryCode, setData);
-    },
-    [countryCode, setData]
-  );
+  const [ clicked, setClicked ] = useState(false);
+  const [ data, setData ] = useState(url);
+  const [ showError, setShowError ] = useState(false);
 
   const renderHeading = () => {
     return <H6 className="bp4-heading">{heading}</H6>;
@@ -35,7 +30,7 @@ const EditableURLCard = ({ countryCode }) => {
         <Button
           onClick={() => {
             if (isValidUrl(data)) {
-              localStorage.setItem(countryUrlKey(countryCode), data);
+              setUrl(data);
               setShowError(false);
               setClicked(false);
             } else {
@@ -47,7 +42,7 @@ const EditableURLCard = ({ countryCode }) => {
         </Button>
         <Button
           onClick={() => {
-            refreshData(countryCode, setData);
+            setData(url);
             setClicked(false);
             setShowError(false);
           }}
@@ -99,14 +94,6 @@ const EditableURLCard = ({ countryCode }) => {
   }
 
   return render();
-}
-
-const refreshData = (countryCode, setData) => {
-  const newData = localStorage.getItem(countryUrlKey(countryCode));
-  if (newData)
-    setData(newData);
-  else
-    setData("");
 }
 
 export default EditableURLCard;
