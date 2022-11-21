@@ -1,79 +1,51 @@
-import { useEffect, useState } from 'react';
-import { useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Tab, Tabs, Spinner } from '@blueprintjs/core';
 import { CONTINENTS_QUERY } from "../graphql/queries";
 import { createSearchParams } from 'react-router-dom';
 import SearchInputField from "./SearchInputField";
 
+const WORLD = 'WO';
+
 //The continent header. Switches between continent tabs that display their respective countries in Panels
 //Additionally provides a search bar for filtering countries in the active Panel
 const ContinentsHeader = ({ searchParams, setSearchParams }) => {
-  //A list of all the continent codes retrieved by the query
-  //Used for error handling
-  const [ continentCodes, setContinentCodes ] = useState(null);
+  const { data, loading, error } = useQuery(CONTINENTS_QUERY);
 
-  const [
-    fetchContinents,
-    {
-      data,
-      loading,
-      error
-    }
-  ] = useLazyQuery(CONTINENTS_QUERY);
+  if (error) {
+    window.alert("Sorry, there was an error: " + error.message);
+    throw error;
+  }
 
-  //On render, fetch the continents data
-  useEffect(() => {
-    fetchContinents().then(() => { if (error) console.log(error); });
-  }, [fetchContinents, error]);
-
-  //Once data is available, put all continent codes in a set
-  //This triggers once
-  useEffect(() => {
-    if (data) {
-      const set = new Set(['WO']);
-      data.continents.forEach((continent) => {
-        set.add(continent.code);
-
-      });
-      setContinentCodes(set);
-    }
-  },[data]);
-
-  //Display a spinner while the query completes
-  if (loading) {
-    return(
+  if (loading || data == null) {
+    return (
       <div style={{ minHeight: '100vh' }}>
         <Spinner style={{ minHeight: '100vh' }}/>
       </div>
     );
   }
 
-  let continentCode = '';
-  if (searchParams.has('continent'))
-    continentCode = searchParams.get('continent');
+  let { continents } = data;
 
-  //When loading is finished, if the continent code provided
-  //does not match any continent codes, throw an error
-  if (!continentCodes)
-    return null;
+  let continentCodes = new Set([ WORLD, ...continents.map(it => it.code)]);
+
+  let continentCode = searchParams.has('continent') ? searchParams.get('continent') : WORLD;
+
   if (!continentCodes.has(continentCode))
     throw new Error('Invalid continent code provided');
 
-  const tabsOnChange = (newTabID) => {
-    //Set the URl continent parameter to the new tab id
-    setSearchParams(createSearchParams({ continent: newTabID }));
+  const handleTabChange = (newTabId) => {
+    let params = newTabId !== WORLD ? { continent: newTabId } : { };
+    setSearchParams(createSearchParams(params));
   }
 
   return (
     <div className="ContinentsHeader">
-      <Tabs id="header-tabs" large onChange={ tabsOnChange } selectedTabId={ continentCode }>
-        <div/>
-        <Tab key="world-panel" id="WO" title="World"/>
-        { data && data.continents.map((continent) => {
-          //Create a unique key and class name for each continent
-          const key = continent.name.replace(/\s/g, "").toLowerCase()
+      <Tabs id="header-tabs" large onChange={ handleTabChange } selectedTabId={ continentCode }>
+        <Tab key="world-panel" id={ WORLD } title="World"/>
+
+        { continents.map((continent) => {
           return (
-            <Tab key={ key + '-panel' } id={ continent.code } title={ continent.name }/>
+            <Tab key={ continent.code } id={ continent.code } title={ continent.name } />
           )
         })}
         <Tabs.Expander/>

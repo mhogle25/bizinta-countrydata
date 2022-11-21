@@ -5,8 +5,8 @@ import { useCountryContacts } from "../utilities/local-storage";
 import ContactInfo from "./ContactInfo";
 import UpdateContactUtility from "./UpdateContactUtility";
 
-const CountryInfoContactsPanel = ({ searchParams }) => {
-  let [ contacts, setContacts ] = useCountryContacts(searchParams.get('country'));
+const CountryInfoContactsPanel = ({ countryCode }) => {
+  let [ contacts, setContacts ] = useCountryContacts(countryCode);
   //The state for the currently displayed contact info. If null, the list should be displayed
   const [ currentContactInfo, setCurrentContactInfo ] = useState(null);
   //The flag that determines if a contact info is being edited

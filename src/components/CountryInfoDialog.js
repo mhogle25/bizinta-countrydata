@@ -1,47 +1,22 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { Dialog, Tabs, Tab, Spinner } from '@blueprintjs/core';
 import CountryInfoGeneralPanel from "./CountryInfoGeneralPanel";
 import CountryInfoLanguagePanel from "./CountryInfoLanguagePanel";
-import { createSearchParams } from "react-router-dom";
-import { useLazyQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { COUNTRY_BY_CODE_QUERY } from '../graphql/queries';
 import CountryInfoContactsPanel from "./CountryInfoContactsPanel";
 
-const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialogOpen }) => {
+const CountryInfoDialog = ({ countryCode, closeDialog  }) => {
   //The currently selected tab state of the Dialog. Initialized to show General Info
   const [ selectedTab, setSelectedTab ] = useState("GI");
 
-  const queryOptions = searchParams.has('country') ?
-    { variables: { code: searchParams.get('country') }} :
-    { variables: { code: ''}} ;
+  const queryOptions = { variables: { code: countryCode } };
 
-  const [
-    fetchCountry,
-    {
-      data,
-      loading,
-      error
-    }
-  ] = useLazyQuery(COUNTRY_BY_CODE_QUERY, queryOptions)
-
-  useEffect(
-    () => {
-      if (dialogOpen && searchParams.has('country')) {
-        fetchCountry({ variables: { code: searchParams.get('country') }}).then(() => {
-          if (error) console.log(error);
-        })
-      }
-    },
-    [dialogOpen, fetchCountry, searchParams, error]
-  );
-
-  const handleClose = useCallback(
-    () => {
-      setDialogOpen(false);
-      setSearchParams(createSearchParams({ continent: searchParams.get('continent') }));
-    },
-    [searchParams, setSearchParams, setDialogOpen]
-  );
+  const {
+    data,
+    loading,
+    error
+  } = useQuery(COUNTRY_BY_CODE_QUERY, queryOptions);
 
   //Conditionally renders the languages tab of the Dialog (as long as a list of languages exists, or it is greater than 0)
   const renderLanguagesTab = () => {
@@ -62,7 +37,7 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
   //Only render if the selected country exists
   const renderTabs = () => {
     //Displays a spinner while the query completes
-    if (loading) return(
+    if (loading) return (
       <div style={{ width: "100%", marginLeft:"auto", marginRight:"auto", height: "100%", marginBottom: "auto", marginTop: "auto" }}>
         <Spinner style={{ width: "100%", marginLeft:"auto", marginRight:"auto", height: "100%", marginBottom: "auto", marginTop: "auto" }}/>
       </div>
@@ -84,7 +59,7 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
           key="contacts-tab"
           id="CO"
           title="Contacts"
-          panel={<CountryInfoContactsPanel searchParams={ searchParams }/>}
+          panel={<CountryInfoContactsPanel countryCode={ countryCode }/>}
         />
       </Tabs>
     )
@@ -93,9 +68,9 @@ const CountryInfoDialog = ({ searchParams, setSearchParams, dialogOpen, setDialo
   const renderDialog = () => {
     return (
       <div className="CountryInfoDialog">
-        <Dialog isOpen={dialogOpen} onClose={handleClose}>
+        <Dialog isOpen onClose={ closeDialog }>
           <div className="bp4-dialog-body">
-            {renderTabs()}
+            { renderTabs() }
           </div>
         </Dialog>
       </div>
